@@ -1,6 +1,7 @@
 package com.Covid_19Patient_Management.Thesis.controllers;
 
 import com.Covid_19Patient_Management.Thesis.dtos.HealthDeclarationDto;
+import com.Covid_19Patient_Management.Thesis.dtos.HealthInfoDtoForDoctor;
 import com.Covid_19Patient_Management.Thesis.models.HealthInformation;
 import com.Covid_19Patient_Management.Thesis.payload.response.ResponseObject;
 import com.Covid_19Patient_Management.Thesis.repository.DoctorRepository;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -70,11 +72,26 @@ public class HealthInformationController {
             @RequestParam Long id,
             @RequestParam Long doctor_id
     ){
-        List<Object> list = healthInformationRepository.viewPatientDeclarations(doctor_id, id);
-        //List<HealthDeclarationDto> Dtolist = healthInformationService.listAllHealthinformationDto(id);
+//        List<Object> list = healthInformationRepository.viewPatientDeclarations(doctor_id, id);
+        ArrayList<HealthInfoDtoForDoctor> list = healthInformationRepository.viewPatientDeclarations(doctor_id, id);
+        List<HealthDeclarationDto> Dtolist = healthInformationService.listAllHealthinformationDto(id);
         //       List<HealthDeclarationDto> lists = healthInformationService.patientFindAllDeclaration();
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "success", list)
+        );
+    }
+
+    @PutMapping(value = "/updateHealthDeclaration")
+    @PreAuthorize("hasRole('PATIENT')")
+    ResponseEntity<?> changeHealthDeclaration(
+            @RequestParam Long id,
+            @RequestParam int blood_pressure,
+            @RequestParam int oxygen_level,
+            @RequestParam String other_diagnose
+    ){
+        healthInformationRepository.updateHealthDeclaration(blood_pressure, oxygen_level, other_diagnose, id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("ok", "success", "Update successfully")
         );
     }
 

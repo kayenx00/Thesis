@@ -1,6 +1,7 @@
 package com.Covid_19Patient_Management.Thesis.repository;
 
 import com.Covid_19Patient_Management.Thesis.models.Doctor;
+import com.Covid_19Patient_Management.Thesis.models.Patient;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -31,4 +32,5 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
             "from patient p, healthinformation h where h.patient_id = p.id and p.chosen_doctor = :id " +
             "Order by h.patient_id DESC, p.name DESC, h.lastUpdate ASC", nativeQuery = true)
     List<Object> viewPatientDeclarations(@Param("id") Long id);
+
 }

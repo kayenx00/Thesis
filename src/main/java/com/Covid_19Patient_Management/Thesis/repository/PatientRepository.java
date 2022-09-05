@@ -36,4 +36,6 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
     @Query(value = "SELECT * FROM Patient where chosen_doctor = :id", nativeQuery = true)
     List<Patient> viewAllPatientOfDoctorId(@Param("id") Long id);
 
+
+
 }
