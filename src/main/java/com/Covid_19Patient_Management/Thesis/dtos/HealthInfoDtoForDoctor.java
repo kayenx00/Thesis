@@ -9,6 +9,7 @@ public interface HealthInfoDtoForDoctor {
     String getDistrict();
     String getCity();
     int getBlood_pressure();
-    int getOther_diagnose();
+    int getOxygen_level();
+    String getOther_diagnose();
     Date getLast_update();
 }

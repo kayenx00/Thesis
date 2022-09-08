@@ -105,7 +105,8 @@ public class PatientController {
 
     @GetMapping(value = "/getAllPatientsOfDoctor")
     @PreAuthorize("hasRole('DOCTOR')")
-    public ResponseEntity<ResponseObject> findAllPatientOfDoctor(@RequestParam Long id){
+    public ResponseEntity<ResponseObject> findAllPatientOfDoctor(@RequestParam("id") Long id){
+        logger.info("Get with ID: " + id);
         List<PatientDto> patients = patientService.viewPatientOfDoctor(id);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "Success", patients)
@@ -120,6 +121,4 @@ public class PatientController {
                 new ResponseObject("ok", "Success", "register successfully !")
         );
     }
-
-
 }

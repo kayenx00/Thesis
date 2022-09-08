@@ -33,11 +33,14 @@ public interface HealthInformationRepository extends JpaRepository<HealthInforma
             "Order by patient_id DESC, patient_name DESC, last_update ASC", nativeQuery = true)
 //    List<Object> viewPatientDeclarations(@Param("id") Long id, @Param("patient_id") Long patient_id);
     ArrayList<HealthInfoDtoForDoctor> viewPatientDeclarations(@Param("id") Long id, @Param("patient_id") Long patient_id);
+    @Modifying
     @Query(value = "Update healthinformation set blood_pressure = :blood_pressure, " +
-            "oxygen_level = :oxygen_level, last_update = :last_update where id = :id", nativeQuery = true)
+            "oxygen_level = :oxygen_level, other_diagnose = :other_diagnose, last_update = :last_update where id = :id", nativeQuery = true)
+    @Transactional
     void updateHealthDeclaration(@Param("blood_pressure") int blood_pressure,
                                  @Param("oxygen_level") int oxygen_level,
-                                 @Param("last_update") String other_diagnose,
+                                 @Param("other_diagnose") String other_diagnose,
+                                 @Param("last_update") Date last_update,
                                  @Param("id") Long id);
 }
 

@@ -84,12 +84,13 @@ public class HealthInformationController {
     @PutMapping(value = "/updateHealthDeclaration")
     @PreAuthorize("hasRole('PATIENT')")
     ResponseEntity<?> changeHealthDeclaration(
-            @RequestParam Long id,
             @RequestParam int blood_pressure,
             @RequestParam int oxygen_level,
-            @RequestParam String other_diagnose
+            @RequestParam String other_diagnose,
+            @RequestParam Long id
     ){
-        healthInformationRepository.updateHealthDeclaration(blood_pressure, oxygen_level, other_diagnose, id);
+        Date date = new Date();
+        healthInformationRepository.updateHealthDeclaration(blood_pressure, oxygen_level, other_diagnose, date, id);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "success", "Update successfully")
         );
