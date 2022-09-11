@@ -30,20 +30,20 @@ public class HealthInformation {
 
     private String other_diagnose;
     @Column(name = "last_update")
-
-
     private Date last_update;
-
+    @Column(name = "advice")
+    private String advice;
     public HealthInformation() {
     }
 
-    public HealthInformation(Long id, Patient patient, int blood_pressure, int oxygen_level, String other_diagnose, Date last_update) {
+    public HealthInformation(Long id, Patient patient, int blood_pressure, int oxygen_level, String other_diagnose, Date last_update, String advice) {
         this.id = id;
         this.patient = patient;
         this.blood_pressure = blood_pressure;
         this.oxygen_level = oxygen_level;
         this.other_diagnose = other_diagnose;
         this.last_update = last_update;
+        this.advice = advice;
     }
 
     public Long getId() {
@@ -92,5 +92,13 @@ public class HealthInformation {
 
     public void setLast_update(Date last_update) {
         this.last_update = last_update;
+    }
+
+    public String getAdvice() {
+        return advice;
+    }
+
+    public void setAdvice(String advice) {
+        this.advice = advice;
     }
 }

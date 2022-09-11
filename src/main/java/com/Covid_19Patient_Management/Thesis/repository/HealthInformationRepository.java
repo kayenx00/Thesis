@@ -28,11 +28,11 @@ public interface HealthInformationRepository extends JpaRepository<HealthInforma
     List<HealthInformation> viewAllHealthDeclarationOfPatientId(@Param("patient_id") Long patient_id);
 
     @Query(value = "SELECT h.id AS id, h.patient_id AS patient_id, p.name AS patient_name, p.district AS district, p.city AS city, h.blood_pressure AS blood_pressure, " +
-            "h.oxygen_level AS oxygen_level, h.other_diagnose AS other_diagnose, h.last_update AS last_update " +
-            "from patient p, healthinformation h where h.patient_id = :patient_id and p.chosen_doctor = :id " +
+            "h.oxygen_level AS oxygen_level, h.other_diagnose AS other_diagnose, h.last_update AS last_update, h.advice AS advice " +
+            "from patient p, healthinformation h where h.patient_id = :patient_id " +
             "Order by patient_id DESC, patient_name DESC, last_update ASC", nativeQuery = true)
 //    List<Object> viewPatientDeclarations(@Param("id") Long id, @Param("patient_id") Long patient_id);
-    ArrayList<HealthInfoDtoForDoctor> viewPatientDeclarations(@Param("id") Long id, @Param("patient_id") Long patient_id);
+    ArrayList<HealthInfoDtoForDoctor> viewPatientDeclarations(@Param("patient_id") Long patient_id);
     @Modifying
     @Query(value = "Update healthinformation set blood_pressure = :blood_pressure, " +
             "oxygen_level = :oxygen_level, other_diagnose = :other_diagnose, last_update = :last_update where id = :id", nativeQuery = true)
@@ -42,5 +42,10 @@ public interface HealthInformationRepository extends JpaRepository<HealthInforma
                                  @Param("other_diagnose") String other_diagnose,
                                  @Param("last_update") Date last_update,
                                  @Param("id") Long id);
+
+    @Modifying
+    @Query(value = "Update healthinformation set advice = :advice where id = :id", nativeQuery = true)
+    @Transactional
+    void updateAdvice(@Param("advice")String advice, @Param("id") Long id);
 }
 

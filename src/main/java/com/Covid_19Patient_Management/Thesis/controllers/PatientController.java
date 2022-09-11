@@ -116,7 +116,7 @@ public class PatientController {
     @PutMapping(value = "/registerDoctor")
     @PreAuthorize("hasRole('PATIENT')")
     public ResponseEntity<?> registerDoctor(@RequestParam Long chosen_doctor, @RequestParam Long id){
-        patientRepository.registerDoctor(chosen_doctor, id);
+        patientRepository.registerDoctor(id, chosen_doctor);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "Success", "register successfully !")
         );

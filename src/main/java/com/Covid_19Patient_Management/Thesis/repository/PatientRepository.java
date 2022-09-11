@@ -24,7 +24,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
     Optional<Patient> findPatientByUserID(@Param("user_id") Long id);
     @Modifying
     @Query(value = "Update patient set name = :name, phone = :phone , id_num = :id_num, city = :city, district =:district " +
-            "where user_id = :id", nativeQuery = true)
+            "where id = :id", nativeQuery = true)
     @Transactional
     void updatePatient(@Param("name")String name, @Param("id_num") String id_num, @Param("phone") String phone,
                      @Param("city") String city, @Param("district") String district, @Param("id") Long id);
@@ -35,6 +35,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
 
     @Query(value = "SELECT * FROM Patient where chosen_doctor = :id", nativeQuery = true)
     List<Patient> viewAllPatientOfDoctorId(@Param("id") Long id);
+
 
 
 

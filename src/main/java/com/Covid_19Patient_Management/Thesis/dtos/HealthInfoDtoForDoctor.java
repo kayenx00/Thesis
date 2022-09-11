@@ -12,4 +12,5 @@ public interface HealthInfoDtoForDoctor {
     int getOxygen_level();
     String getOther_diagnose();
     Date getLast_update();
+    String getAdvice();
 }

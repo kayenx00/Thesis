@@ -11,6 +11,7 @@ public class PatientDto {
     private String district;
     private Long user_id;
     private String username;
+    private Long chosen_doctor;
 
     public Long getUser_id() {
         return user_id;
@@ -90,6 +91,14 @@ public class PatientDto {
         this.district = district;
     }
 
+    public Long getChosen_doctor() {
+        return chosen_doctor;
+    }
+
+    public void setChosen_doctor(Long chosen_doctor) {
+        this.chosen_doctor = chosen_doctor;
+    }
+
     public void clone(Patient patient){
         this.id = patient.getId();
         this.name = patient.getName();
@@ -99,6 +108,7 @@ public class PatientDto {
         this.district = patient.getDistrict();
         this.user_id = patient.getUser().getId();
         this.username = patient.getUser().getUsername();
+        this.chosen_doctor = patient.getDoctor().getId();
     }
 
 }

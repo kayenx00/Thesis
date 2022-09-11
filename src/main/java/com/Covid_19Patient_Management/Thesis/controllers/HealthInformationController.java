@@ -62,22 +62,21 @@ public class HealthInformationController {
         List<HealthDeclarationDto> Dtolist = healthInformationService.listAllHealthinformationDto(id);
         //       List<HealthDeclarationDto> lists = healthInformationService.patientFindAllDeclaration();
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("ok", "success", Dtolist)
+                new ResponseObject("ok", "success", list)
         );
     }
 
     @GetMapping(value = "/viewPatientAllDeclaration")
     @PreAuthorize("hasRole('DOCTOR')")
     ResponseEntity<?> viewPatientHealthDeclarations(
-            @RequestParam Long id,
-            @RequestParam Long doctor_id
+            @RequestParam Long id
     ){
 //        List<Object> list = healthInformationRepository.viewPatientDeclarations(doctor_id, id);
-        ArrayList<HealthInfoDtoForDoctor> list = healthInformationRepository.viewPatientDeclarations(doctor_id, id);
+        ArrayList<HealthInfoDtoForDoctor> list = healthInformationRepository.viewPatientDeclarations(id);
         List<HealthDeclarationDto> Dtolist = healthInformationService.listAllHealthinformationDto(id);
         //       List<HealthDeclarationDto> lists = healthInformationService.patientFindAllDeclaration();
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("ok", "success", list)
+                new ResponseObject("ok", "success", Dtolist)
         );
     }
 
@@ -93,6 +92,18 @@ public class HealthInformationController {
         healthInformationRepository.updateHealthDeclaration(blood_pressure, oxygen_level, other_diagnose, date, id);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "success", "Update successfully")
+        );
+    }
+
+    @PutMapping(value = "/updateAdvice")
+    @PreAuthorize("hasRole('DOCTOR')")
+    ResponseEntity<?> makeAdvice(
+            @RequestParam String advice,
+            @RequestParam Long id
+    ){
+        healthInformationRepository.updateAdvice(advice, id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("ok", "success", "Make Advice successfully")
         );
     }
 
