@@ -108,7 +108,10 @@ public class PatientDto {
         this.district = patient.getDistrict();
         this.user_id = patient.getUser().getId();
         this.username = patient.getUser().getUsername();
-        this.chosen_doctor = patient.getDoctor().getId();
+        if(patient.getDoctor() == null){
+            this.chosen_doctor = null;
+        }else{
+        this.chosen_doctor = patient.getDoctor().getId();}
     }
 
 }

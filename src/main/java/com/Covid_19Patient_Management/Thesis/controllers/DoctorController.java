@@ -97,6 +97,7 @@ public class DoctorController {
                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
         roles.add(userRole);
         user.setRoles(roles);
+        user.setEnabled(true);
         userRepository.save(user);
         Optional<User> userToAddToDoctorTable = userRepository.findByUsername(request.getUsername());
         Long doctorUserId = userToAddToDoctorTable.get().getId();
@@ -120,7 +121,16 @@ public class DoctorController {
         );
     }
 
-
+    @GetMapping(value = "/getDoctorByIdForPatient")
+    @PreAuthorize("hasRole('PATIENT')")
+    public ResponseEntity<?> patientGetDoctorInformation(@RequestParam Long id){
+        Optional<Doctor> doctor = doctorRepository.findById(id);
+        DoctorDto doctorDto = new DoctorDto();
+        doctorDto.clone(doctor.get());
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("ok", "success", doctorDto)
+        );
+    }
 
     @DeleteMapping(value = "/ddeleteDoctors")
     @PreAuthorize("hasRole('ADMIN')")

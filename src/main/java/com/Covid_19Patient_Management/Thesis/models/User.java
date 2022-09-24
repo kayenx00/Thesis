@@ -36,7 +36,10 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
-
+    @Column(name = "verification_code")
+    private String verificationCode;
+    @Column(name = "enabled")
+    private boolean enabled;
     public User() {
     }
 
@@ -44,6 +47,22 @@ public class User {
         this.username = username;
         this.email = email;
         this.password = password;
+    }
+
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public Long getId() {

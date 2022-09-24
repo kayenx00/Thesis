@@ -2,11 +2,15 @@ package com.Covid_19Patient_Management.Thesis.controllers;
 
 import com.Covid_19Patient_Management.Thesis.dtos.HealthDeclarationDto;
 import com.Covid_19Patient_Management.Thesis.dtos.HealthInfoDtoForDoctor;
+import com.Covid_19Patient_Management.Thesis.models.Doctor;
 import com.Covid_19Patient_Management.Thesis.models.HealthInformation;
+import com.Covid_19Patient_Management.Thesis.models.Patient;
+import com.Covid_19Patient_Management.Thesis.models.User;
 import com.Covid_19Patient_Management.Thesis.payload.response.ResponseObject;
 import com.Covid_19Patient_Management.Thesis.repository.DoctorRepository;
 import com.Covid_19Patient_Management.Thesis.repository.HealthInformationRepository;
 import com.Covid_19Patient_Management.Thesis.repository.PatientRepository;
+import com.Covid_19Patient_Management.Thesis.repository.UserRepository;
 import com.Covid_19Patient_Management.Thesis.services.PatientService;
 import com.Covid_19Patient_Management.Thesis.services.serviceImp.DoctorServiceImplementation;
 import com.Covid_19Patient_Management.Thesis.services.serviceImp.HealthInformationServiceImplementation;
@@ -20,12 +24,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api")
 public class HealthInformationController {
-
+    @Autowired
+    private UserRepository userRepository;
     @Autowired
     private DoctorRepository doctorRepository;
     @Autowired
@@ -48,8 +54,12 @@ public class HealthInformationController {
     ){
         Date date = new Date();
         healthInformationRepository.healthDeclaration(id, blood_pressure, oxygen_level, other_diagnose, date);
+        Optional<Patient> patient = patientRepository.findById(id);
+        Optional<Doctor> doctor = doctorRepository.findById(patient.get().getDoctor().getId());
+        Optional<User> user = userRepository.findById(doctor.get().getUser().getId());
+        String email = user.get().getEmail();
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("ok", "success", "Add successfully")
+                new ResponseObject("ok", "success", email)
         );
     }
 
@@ -102,8 +112,12 @@ public class HealthInformationController {
             @RequestParam Long id
     ){
         healthInformationRepository.updateAdvice(advice, id);
+        Optional<HealthInformation> healthInformation = healthInformationRepository.findById(id);
+        Optional<Patient> patient = patientRepository.findById(healthInformation.get().getPatient().getId());
+        Optional<User> user = userRepository.findById(patient.get().getUser().getId());
+        String email = user.get().getEmail();
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("ok", "success", "Make Advice successfully")
+                new ResponseObject("ok", "success", email)
         );
     }
 

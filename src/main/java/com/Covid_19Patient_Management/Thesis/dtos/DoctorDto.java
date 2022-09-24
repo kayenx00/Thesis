@@ -9,6 +9,7 @@ public class DoctorDto {
     private Long id;
     private String name;
     private String phone;
+    private String email;
     private Long user_id;
     private String username;
 //    private Collection<Patient> patients;
@@ -45,7 +46,14 @@ public class DoctorDto {
         this.username = username;
     }
 
-//    public Collection<Patient> getPatients() {
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    //    public Collection<Patient> getPatients() {
 //        return patients;
 //    }
 //
@@ -79,7 +87,7 @@ public class DoctorDto {
         this.phone = doctor.getPhone();
         this.user_id = doctor.getUser().getId();
         this.username = doctor.getUser().getUsername();
-
+        this.email = doctor.getUser().getEmail();
 //        this.patients = doctor.getPatients();
     }
     public void cloneForPatientView(Doctor doctor){
@@ -88,6 +96,7 @@ public class DoctorDto {
         this.phone = doctor.getPhone();
 //        this.user_id = doctor.getUser().getId();
         this.username = doctor.getUser().getUsername();
+        this.email = doctor.getUser().getEmail();
 
 //        this.patients = doctor.getPatients();
     }

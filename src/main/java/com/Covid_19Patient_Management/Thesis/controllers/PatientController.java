@@ -3,12 +3,14 @@ package com.Covid_19Patient_Management.Thesis.controllers;
 import com.Covid_19Patient_Management.Thesis.dtos.DoctorDto;
 import com.Covid_19Patient_Management.Thesis.dtos.PatientDto;
 import com.Covid_19Patient_Management.Thesis.models.*;
+import com.Covid_19Patient_Management.Thesis.payload.request.RegisterRequest;
 import com.Covid_19Patient_Management.Thesis.payload.request.SignupRequest;
 import com.Covid_19Patient_Management.Thesis.payload.response.MessageResponse;
 import com.Covid_19Patient_Management.Thesis.payload.response.ResponseObject;
 import com.Covid_19Patient_Management.Thesis.repository.PatientRepository;
 import com.Covid_19Patient_Management.Thesis.repository.RoleRepository;
 import com.Covid_19Patient_Management.Thesis.repository.UserRepository;
+import com.Covid_19Patient_Management.Thesis.services.UserService;
 import com.Covid_19Patient_Management.Thesis.services.serviceImp.PatientServiceImplementation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +21,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +33,8 @@ import java.util.Set;
 @RestController
 @RequestMapping("/api/")
 public class PatientController {
+    @Autowired
+    private UserService userService;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -41,33 +47,52 @@ public class PatientController {
     PasswordEncoder encoder;
     private static final Logger logger = LoggerFactory.getLogger(PatientController.class);
     @PostMapping("/patientSignup")
-    public ResponseEntity<?> registerPatient(@Valid @RequestBody SignupRequest signUpRequest) {
-        logger.info("Sign up with username: " + signUpRequest.getUsername() + ", roles: " + signUpRequest.getRole());
-        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+    public ResponseEntity<?> registerPatient(@Valid @RequestBody RegisterRequest registerRequest) throws UnsupportedEncodingException, MessagingException {
+//        logger.info("Sign up with username: " + signUpRequest.getUsername() + ", roles: " + signUpRequest.getRole());
+//        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+//            return ResponseEntity
+//                    .badRequest()
+//                    .body(new MessageResponse("Error: Username is already taken!"));
+//        }
+//
+//        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+//            return ResponseEntity
+//                    .badRequest()
+//                    .body(new MessageResponse("Error: Email is already in use!"));
+//        }
+//
+//        // Create new user's account
+//        User user = new User(signUpRequest.getUsername(),
+//                signUpRequest.getEmail(),
+//                encoder.encode(signUpRequest.getPassword()));
+//        Set<Role> roles = new HashSet<>();
+//        Role userRole = roleRepository.findByName(ERole.ROLE_PATIENT)
+//                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+//        roles.add(userRole);
+//        user.setRoles(roles);
+//        userRepository.save(user);
+//        Optional<User> userToAddToPatientTable = userRepository.findByUsername(signUpRequest.getUsername());
+//        patientRepository.insertIdUSerToPatient(userToAddToPatientTable.get().getId());
+//        return ResponseEntity.ok(new MessageResponse("Patient registered successfully!"));
+        if (userRepository.existsByUsername(registerRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: Username is already taken!"));
         }
 
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+        if (userRepository.existsByEmail(registerRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: Email is already in use!"));
         }
-
-        // Create new user's account
-        User user = new User(signUpRequest.getUsername(),
-                signUpRequest.getEmail(),
-                encoder.encode(signUpRequest.getPassword()));
-        Set<Role> roles = new HashSet<>();
-        Role userRole = roleRepository.findByName(ERole.ROLE_PATIENT)
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-        roles.add(userRole);
-        user.setRoles(roles);
-        userRepository.save(user);
-        Optional<User> userToAddToPatientTable = userRepository.findByUsername(signUpRequest.getUsername());
+        User user = new User(registerRequest.getUsername(), registerRequest.getEmail(), registerRequest.getPassword());
+        String siteURL = "http://localhost:8080/api/auth";
+        userService.register(user, siteURL);
+        Optional<User> userToAddToPatientTable = userRepository.findByUsername(registerRequest.getUsername());
         patientRepository.insertIdUSerToPatient(userToAddToPatientTable.get().getId());
-        return ResponseEntity.ok(new MessageResponse("Patient registered successfully!"));
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("ok", "success", "register successfully")
+        );
     }
 
     @PutMapping(value = "/patientUpdate")
@@ -116,9 +141,18 @@ public class PatientController {
     @PutMapping(value = "/registerDoctor")
     @PreAuthorize("hasRole('PATIENT')")
     public ResponseEntity<?> registerDoctor(@RequestParam Long chosen_doctor, @RequestParam Long id){
-        patientRepository.registerDoctor(id, chosen_doctor);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("ok", "Success", "register successfully !")
-        );
+        Optional<Patient> patient = patientRepository.findById(id);
+        if(patient.isPresent()){
+            if(patient.get().getDoctor() != null){
+                return ResponseEntity.badRequest().body(new MessageResponse("Already register doctor"));
+            }
+            else{
+                patientRepository.registerDoctor(id, chosen_doctor);
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("ok", "Success", "register successfully !")
+                );
+            }
+        }
+        return ResponseEntity.badRequest().body(new MessageResponse("Bad Request"));
     }
 }
