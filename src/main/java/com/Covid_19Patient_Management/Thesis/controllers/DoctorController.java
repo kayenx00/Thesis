@@ -45,7 +45,7 @@ public class DoctorController {
     private RoleRepository roleRepository;
     @Autowired
     private PasswordEncoder encoder;
-    @PutMapping(value = "/getDoctorById")
+    @GetMapping(value = "/getDoctorById")
     @PreAuthorize("hasRole('DOCTOR')")
     public ResponseEntity<?> findDoctorByUserID(@RequestParam Long id){
         Optional<Doctor> doctor = doctorRepository.findDoctorByUserID(id);
