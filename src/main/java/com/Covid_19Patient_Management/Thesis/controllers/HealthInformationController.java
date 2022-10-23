@@ -56,16 +56,19 @@ public class HealthInformationController {
             @RequestParam Long id,
             @RequestParam int blood_pressure,
             @RequestParam int oxygen_level,
-            @RequestParam String other_diagnose
+            @RequestParam String other_diagnose,
+            @RequestParam String fever,
+            @RequestParam String headache,
+            @RequestParam String muscleache
     ) throws MessagingException, UnsupportedEncodingException {
         Date date = new Date();
-        healthInformationRepository.healthDeclaration(id, blood_pressure, oxygen_level, other_diagnose, date);
+        healthInformationRepository.healthDeclaration(id, blood_pressure, oxygen_level, fever, headache, muscleache, other_diagnose, date);
         Optional<Patient> patient = patientRepository.findById(id);
         Optional<Doctor> doctor = doctorRepository.findById(patient.get().getDoctor().getId());
         Optional<User> user = userRepository.findById(doctor.get().getUser().getId());
         //String email = user.get().getEmail();
-        String email = "nguyenhung732k@gmail.com";
-        String fromAddress = "nguyenhlong0910gmail.com";
+        String email = "nguyenhlong0910@gmail.com";
+        String fromAddress = "nguyenhlong0910@gmail.com";
         String senderName = "Patient_Management_Admin";
         String subject = "Notification from Patient";
         String content = "Dear [[name]], username [[username]]<br>"

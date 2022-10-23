@@ -21,9 +21,13 @@ public class HealthInformation {
     @Column(name = "blood_pressure")
     private int blood_pressure;
     @Column(name = "oxygen_level")
-
     private int oxygen_level;
-
+    @Column(name = "fever")
+    private String fever ;
+    @Column(name = "headache")
+    private String headache ;
+    @Column(name = "muscleache")
+    private String muscleache ;
     @NotBlank
     @Size(min = 1, max = 100)
     @Column(name = "other_diagnose")
@@ -36,11 +40,14 @@ public class HealthInformation {
     public HealthInformation() {
     }
 
-    public HealthInformation(Long id, Patient patient, int blood_pressure, int oxygen_level, String other_diagnose, Date last_update, String advice) {
+    public HealthInformation(Long id, Patient patient, int blood_pressure, int oxygen_level, String fever, String headache, String muscleache, String other_diagnose, Date last_update, String advice) {
         this.id = id;
         this.patient = patient;
         this.blood_pressure = blood_pressure;
         this.oxygen_level = oxygen_level;
+        this.fever = fever;
+        this.headache = headache;
+        this.muscleache = muscleache;
         this.other_diagnose = other_diagnose;
         this.last_update = last_update;
         this.advice = advice;
@@ -76,6 +83,30 @@ public class HealthInformation {
 
     public void setOxygen_level(int oxygen_level) {
         this.oxygen_level = oxygen_level;
+    }
+
+    public String getFever() {
+        return fever;
+    }
+
+    public void setFever(String fever) {
+        this.fever = fever;
+    }
+
+    public String getHeadache() {
+        return headache;
+    }
+
+    public void setHeadache(String headache) {
+        this.headache = headache;
+    }
+
+    public String getMuscleache() {
+        return muscleache;
+    }
+
+    public void setMuscleache(String muscleache) {
+        this.muscleache = muscleache;
     }
 
     public String getOther_diagnose() {

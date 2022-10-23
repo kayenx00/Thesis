@@ -15,12 +15,15 @@ public interface HealthInformationRepository extends JpaRepository<HealthInforma
     Optional<HealthInformation> findById(Long id);
     List<HealthInformation> findAll();
     @Modifying
-    @Query(value = "INSERT INTO HealthInformation(patient_id, blood_pressure, oxygen_level, other_diagnose, last_update) " +
-            "values(:patient_id, :blood_pressure, :oxygen_level, :other_diagnose, :last_update)", nativeQuery = true)
+    @Query(value = "INSERT INTO HealthInformation(patient_id, blood_pressure, oxygen_level, fever, headache, muscleache, other_diagnose, last_update) " +
+            "values(:patient_id, :blood_pressure, :oxygen_level, :fever, :headache, :muscleache, :other_diagnose, :last_update)", nativeQuery = true)
     @Transactional
     void healthDeclaration(@Param("patient_id") Long patient_id,
                            @Param("blood_pressure") int blood_pressure,
                            @Param("oxygen_level") int oxygen_level,
+                           @Param("fever") String fever,
+                           @Param("headache") String headache,
+                           @Param("muscleache") String muscleache,
                            @Param("other_diagnose") String other_diagnose,
                            @Param("last_update") Date last_update);
 
