@@ -20,22 +20,20 @@ public class Patient implements Serializable {
     private String phone;
     private String city;
     private String district;
-
-
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-
     private User user;
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "chosen_doctor")
     private Doctor doctor;
-
     @JsonManagedReference
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
     private Collection<HealthInformation> healthInformation;
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
+    private Collection<Appointment> appointments;
     public Doctor getDoctor() {
         return doctor;
     }
@@ -106,5 +104,13 @@ public class Patient implements Serializable {
 
     public void setHealthInformation(Collection<HealthInformation> healthInformation) {
         this.healthInformation = healthInformation;
+    }
+
+    public Collection<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(Collection<Appointment> appointments) {
+        this.appointments = appointments;
     }
 }

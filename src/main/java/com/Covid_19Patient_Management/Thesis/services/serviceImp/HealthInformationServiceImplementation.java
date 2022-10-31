@@ -9,6 +9,8 @@ import com.Covid_19Patient_Management.Thesis.models.Patient;
 import com.Covid_19Patient_Management.Thesis.repository.HealthInformationRepository;
 import com.Covid_19Patient_Management.Thesis.services.HealthInformationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -40,7 +42,7 @@ public class HealthInformationServiceImplementation implements HealthInformation
     @Override
     public List<HealthDeclarationDto> listAllHealthinformationDto(Long id) {
         {
-            List<HealthInformation> list = healthInformationRepository.viewAllHealthDeclarationOfPatientId(id);
+            List<HealthInformation> list = healthInformationRepository.viewAllHealthDeclarationOfPatientId(id, PageRequest.of(0, 1000, Sort.Direction.DESC, "last_update"));
             List<HealthDeclarationDto> DtoList = new ArrayList<>();
             for (HealthInformation h: list) {
                 HealthDeclarationDto healthDeclarationDto = new HealthDeclarationDto();

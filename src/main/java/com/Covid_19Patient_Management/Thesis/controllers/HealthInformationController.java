@@ -2,19 +2,16 @@ package com.Covid_19Patient_Management.Thesis.controllers;
 
 import com.Covid_19Patient_Management.Thesis.dtos.HealthDeclarationDto;
 import com.Covid_19Patient_Management.Thesis.dtos.HealthInfoDtoForDoctor;
-import com.Covid_19Patient_Management.Thesis.models.Doctor;
-import com.Covid_19Patient_Management.Thesis.models.HealthInformation;
-import com.Covid_19Patient_Management.Thesis.models.Patient;
-import com.Covid_19Patient_Management.Thesis.models.User;
+import com.Covid_19Patient_Management.Thesis.models.*;
 import com.Covid_19Patient_Management.Thesis.payload.response.ResponseObject;
-import com.Covid_19Patient_Management.Thesis.repository.DoctorRepository;
-import com.Covid_19Patient_Management.Thesis.repository.HealthInformationRepository;
-import com.Covid_19Patient_Management.Thesis.repository.PatientRepository;
-import com.Covid_19Patient_Management.Thesis.repository.UserRepository;
+import com.Covid_19Patient_Management.Thesis.repository.*;
 import com.Covid_19Patient_Management.Thesis.services.serviceImp.DoctorServiceImplementation;
 import com.Covid_19Patient_Management.Thesis.services.serviceImp.HealthInformationServiceImplementation;
+import com.Covid_19Patient_Management.Thesis.services.serviceImp.NurseServiceImplementation;
 import com.Covid_19Patient_Management.Thesis.services.serviceImp.PatientServiceImplementation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -43,6 +40,10 @@ public class HealthInformationController {
     @Autowired
     private DoctorServiceImplementation doctorService;
     @Autowired
+    private NurseRepository nurseRepository;
+    @Autowired
+    private NurseServiceImplementation nurseService;
+    @Autowired
     private PatientRepository patientRepository;
     @Autowired
     private PatientServiceImplementation patientService;
@@ -62,7 +63,7 @@ public class HealthInformationController {
             @RequestParam String muscleache
     ) throws MessagingException, UnsupportedEncodingException {
         Date date = new Date();
-        healthInformationRepository.healthDeclaration(id, blood_pressure, oxygen_level, fever, headache, muscleache, other_diagnose, date);
+        healthInformationRepository.healthDeclaration(id, blood_pressure, oxygen_level, fever, headache, muscleache, other_diagnose, "Patient" ,date);
         Optional<Patient> patient = patientRepository.findById(id);
         Optional<Doctor> doctor = doctorRepository.findById(patient.get().getDoctor().getId());
         Optional<User> user = userRepository.findById(doctor.get().getUser().getId());
@@ -93,12 +94,59 @@ public class HealthInformationController {
         );
     }
 
+    @PostMapping(value = "/nurseAddHealthDeclaration")
+    @PreAuthorize("hasRole('NURSE')")
+    ResponseEntity<?> nurseAddHealthDeclaration(
+            @RequestParam Long nurse_id,
+            @RequestParam Long id,
+            @RequestParam int blood_pressure,
+            @RequestParam int oxygen_level,
+            @RequestParam String other_diagnose,
+            @RequestParam String fever,
+            @RequestParam String headache,
+            @RequestParam String muscleache,
+            @RequestParam String comment_from_nurse
+    ) throws MessagingException, UnsupportedEncodingException {
+        Date date = new Date();
+        Optional<Nurse> nurse = nurseRepository.findById(nurse_id);
+        healthInformationRepository.healthDeclarationByNurse(id, blood_pressure, oxygen_level, fever,
+                headache, muscleache, other_diagnose, "Nurse:" + nurse.get().getName(), comment_from_nurse, date);
+        Optional<Patient> patient = patientRepository.findById(id);
+        Optional<Doctor> doctor = doctorRepository.findById(patient.get().getDoctor().getId());
+        Optional<User> user = userRepository.findById(doctor.get().getUser().getId());
+        String email = user.get().getEmail();
+//        String email = "nguyenhlong0910@gmail.com";
+//        String fromAddress = "nguyenhlong0910@gmail.com";
+//        String senderName = "Patient_Management_Admin";
+//        String subject = "Notification from Patient";
+//        String content = "Dear [[name]], username [[username]]<br>"
+//                + "Your Patient - [[PatientName]] has add a health declaration<br>"
+//                + "Please check it out.<br>"
+//                + "Thank you,<br>";
+//
+//        MimeMessage message = mailSender.createMimeMessage();
+//        MimeMessageHelper helper = new MimeMessageHelper(message);
+//
+//        helper.setFrom(fromAddress, senderName);
+//        helper.setTo(email);
+//        helper.setSubject(subject);
+//
+//        content = content.replace("[[name]]", doctor.get().getName());
+//        content = content.replace("[[username]]", user.get().getUsername());
+//        content = content.replace("[[PatientName]]", patient.get().getName());
+//        helper.setText(content, true);
+//        mailSender.send(message);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("ok", "success", email)
+        );
+    }
+
     @GetMapping(value = "/viewAllDeclaration")
     @PreAuthorize("hasRole('PATIENT')")
     ResponseEntity<?> viewHealthDeclarations(
             @RequestParam Long id
     ){
-        List<HealthInformation> list = healthInformationRepository.viewAllHealthDeclarationOfPatientId(id);
+        List<HealthInformation> list = healthInformationRepository.viewAllHealthDeclarationOfPatientId(id, PageRequest.of(0, 1000, Sort.Direction.DESC, "last_update"));
         List<HealthDeclarationDto> Dtolist = healthInformationService.listAllHealthinformationDto(id);
         //       List<HealthDeclarationDto> lists = healthInformationService.patientFindAllDeclaration();
         return ResponseEntity.status(HttpStatus.OK).body(

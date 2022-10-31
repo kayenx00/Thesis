@@ -129,7 +129,7 @@ public class PatientController {
     }
 
     @GetMapping(value = "/getAllPatientsOfDoctor")
-    @PreAuthorize("hasRole('DOCTOR')")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
     public ResponseEntity<ResponseObject> findAllPatientOfDoctor(@RequestParam("id") Long id){
         logger.info("Get with ID: " + id);
         List<PatientDto> patients = patientService.viewPatientOfDoctor(id);

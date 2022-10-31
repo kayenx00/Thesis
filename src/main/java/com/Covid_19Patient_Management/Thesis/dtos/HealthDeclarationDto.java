@@ -15,8 +15,9 @@ public class HealthDeclarationDto {
     private String muscleache;
     private Date last_update;
     private String advice ;
-
-    public HealthDeclarationDto(Long id, Long patient_id, int blood_pressure, int oxygen_level, String other_diagnose, Date last_update, String advice) {
+    private String comment ;
+    private String measured_by;
+    public HealthDeclarationDto(Long id, Long patient_id, int blood_pressure, int oxygen_level, String other_diagnose, Date last_update, String advice, String comment, String measured_by) {
         this.id = id;
 //        this.patient_id = patient_id;
         this.blood_pressure = blood_pressure;
@@ -24,6 +25,9 @@ public class HealthDeclarationDto {
         this.other_diagnose = other_diagnose;
         this.last_update = last_update;
         this.advice = advice;
+        this.comment = comment;
+        this.measured_by = measured_by;
+
     }
 
     public Date getLast_update() {
@@ -119,5 +123,7 @@ public class HealthDeclarationDto {
         this.other_diagnose = healthInformation.getOther_diagnose();
         this.last_update = healthInformation.getLast_update();
         this.advice = healthInformation.getAdvice();
+        this.comment = healthInformation.getComment();
+        this.measured_by = healthInformation.getMeasured_by();
     }
 }

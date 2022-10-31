@@ -17,7 +17,6 @@ public class HealthInformation {
     @JsonBackReference
     @JoinColumn(name = "patient_id")
     private Patient patient;
-
     @Column(name = "blood_pressure")
     private int blood_pressure;
     @Column(name = "oxygen_level")
@@ -29,7 +28,7 @@ public class HealthInformation {
     @Column(name = "muscleache")
     private String muscleache ;
     @NotBlank
-    @Size(min = 1, max = 100)
+    @Size(min = 1, max = 255)
     @Column(name = "other_diagnose")
 
     private String other_diagnose;
@@ -37,6 +36,11 @@ public class HealthInformation {
     private Date last_update;
     @Column(name = "advice")
     private String advice;
+    @Size(min = 1, max = 255)
+    @Column(name = "comment_from_nurse")
+    private String comment;
+    @Column(name = "measured_by")
+    private String measured_by;
     public HealthInformation() {
     }
 
@@ -51,6 +55,21 @@ public class HealthInformation {
         this.other_diagnose = other_diagnose;
         this.last_update = last_update;
         this.advice = advice;
+    }
+
+    public HealthInformation(Long id, Patient patient, int blood_pressure, int oxygen_level, String fever, String headache, String muscleache, String other_diagnose, Date last_update, String advice, String comment, String measured_by) {
+        this.id = id;
+        this.patient = patient;
+        this.blood_pressure = blood_pressure;
+        this.oxygen_level = oxygen_level;
+        this.fever = fever;
+        this.headache = headache;
+        this.muscleache = muscleache;
+        this.other_diagnose = other_diagnose;
+        this.last_update = last_update;
+        this.advice = advice;
+        this.comment = comment;
+        this.measured_by = measured_by;
     }
 
     public Long getId() {
@@ -131,5 +150,21 @@ public class HealthInformation {
 
     public void setAdvice(String advice) {
         this.advice = advice;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getMeasured_by() {
+        return measured_by;
+    }
+
+    public void setMeasured_by(String measured_by) {
+        this.measured_by = measured_by;
     }
 }

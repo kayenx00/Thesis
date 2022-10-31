@@ -1,16 +1,17 @@
 package com.Covid_19Patient_Management.Thesis.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
-@Table(name = "Doctor",
+@Table(name = "Nurse",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = "user_id")
         })
-public class Doctor {
+public class Nurse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,19 +21,12 @@ public class Doctor {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name = "doctor")
+    private Doctor doctor;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
-    private Collection<Patient> patients ;
-
-    @JsonManagedReference
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
-    private Collection<Nurse> nurses ;
-
-    @JsonManagedReference
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
-    private Collection<Appointment> appointments;
-    public Doctor(){
+    public Nurse(){
     }
     public Long getId() {
         return id;
@@ -66,27 +60,11 @@ public class Doctor {
         this.user = user;
     }
 
-    public Collection<Patient> getPatients() {
-        return patients;
+    public Doctor getDoctor() {
+        return doctor;
     }
 
-    public void setPatients(Collection<Patient> patients) {
-        this.patients = patients;
-    }
-
-    public Collection<Nurse> getNurses() {
-        return nurses;
-    }
-
-    public void setNurses(Collection<Nurse> nurses) {
-        this.nurses = nurses;
-    }
-
-    public Collection<Appointment> getAppointments() {
-        return appointments;
-    }
-
-    public void setAppointments(Collection<Appointment> appointments) {
-        this.appointments = appointments;
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
     }
 }

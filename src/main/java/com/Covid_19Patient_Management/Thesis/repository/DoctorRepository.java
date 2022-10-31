@@ -21,7 +21,6 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     @Query(value = "INSERT INTO Doctor(name, phone, user_id) VALUES(:name, :phone, :id)", nativeQuery = true)
     @Transactional
     void createDoctor(@Param("name")String name, @Param("phone") String phone, @Param("id") Long id);
-
     @Modifying
     @Query(value = "Update Doctor set name = :name, phone = :phone where id = :id", nativeQuery = true)
     @Transactional
