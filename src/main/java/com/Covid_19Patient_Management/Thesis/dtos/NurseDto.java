@@ -51,6 +51,14 @@ public class NurseDto {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public String getWork_under_doctor() {
+        return work_under_doctor;
+    }
+
+    public void setWork_under_doctor(String work_under_doctor) {
+        this.work_under_doctor = work_under_doctor;
+    }
     //    public Collection<Patient> getPatients() {
 //        return patients;
 //    }
@@ -86,7 +94,11 @@ public class NurseDto {
         this.user_id = nurse.getUser().getId();
         this.username = nurse.getUser().getUsername();
         this.email = nurse.getUser().getEmail();
-        this.work_under_doctor = nurse.getDoctor().getName();
+        if(nurse.getDoctor() ==null) {
+            this.work_under_doctor = null;
+        } else {
+            this.work_under_doctor = nurse.getDoctor().getName();
+        }
 //        this.patients = doctor.getPatients();
     }
     public void cloneForPatientView(Nurse nurse){

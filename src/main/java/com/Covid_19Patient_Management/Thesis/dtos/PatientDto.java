@@ -11,7 +11,7 @@ public class PatientDto {
     private String district;
     private Long user_id;
     private String username;
-    private Long chosen_doctor;
+    private String chosen_doctor;
 
     public Long getUser_id() {
         return user_id;
@@ -91,11 +91,11 @@ public class PatientDto {
         this.district = district;
     }
 
-    public Long getChosen_doctor() {
+    public String getChosen_doctor() {
         return chosen_doctor;
     }
 
-    public void setChosen_doctor(Long chosen_doctor) {
+    public void setChosen_doctor(String chosen_doctor) {
         this.chosen_doctor = chosen_doctor;
     }
 
@@ -111,7 +111,7 @@ public class PatientDto {
         if(patient.getDoctor() == null){
             this.chosen_doctor = null;
         }else{
-        this.chosen_doctor = patient.getDoctor().getId();}
+        this.chosen_doctor = patient.getDoctor().getName();}
     }
 
 }

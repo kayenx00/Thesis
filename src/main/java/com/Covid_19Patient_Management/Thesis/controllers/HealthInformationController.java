@@ -155,7 +155,7 @@ public class HealthInformationController {
     }
 
     @GetMapping(value = "/viewPatientAllDeclaration")
-    @PreAuthorize("hasRole('DOCTOR')")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
     ResponseEntity<?> viewPatientHealthDeclarations(
             @RequestParam Long id
     ){
@@ -241,5 +241,6 @@ public class HealthInformationController {
                 new ResponseObject("ok", "success", email)
         );
     }
+
 
 }

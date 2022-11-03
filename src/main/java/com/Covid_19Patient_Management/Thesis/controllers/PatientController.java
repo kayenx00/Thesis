@@ -1,16 +1,19 @@
 package com.Covid_19Patient_Management.Thesis.controllers;
 
 import com.Covid_19Patient_Management.Thesis.dtos.DoctorDto;
+import com.Covid_19Patient_Management.Thesis.dtos.NurseDto;
 import com.Covid_19Patient_Management.Thesis.dtos.PatientDto;
 import com.Covid_19Patient_Management.Thesis.models.*;
 import com.Covid_19Patient_Management.Thesis.payload.request.RegisterRequest;
 import com.Covid_19Patient_Management.Thesis.payload.request.SignupRequest;
 import com.Covid_19Patient_Management.Thesis.payload.response.MessageResponse;
 import com.Covid_19Patient_Management.Thesis.payload.response.ResponseObject;
+import com.Covid_19Patient_Management.Thesis.repository.NurseRepository;
 import com.Covid_19Patient_Management.Thesis.repository.PatientRepository;
 import com.Covid_19Patient_Management.Thesis.repository.RoleRepository;
 import com.Covid_19Patient_Management.Thesis.repository.UserRepository;
 import com.Covid_19Patient_Management.Thesis.services.UserService;
+import com.Covid_19Patient_Management.Thesis.services.serviceImp.NurseServiceImplementation;
 import com.Covid_19Patient_Management.Thesis.services.serviceImp.PatientServiceImplementation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +44,10 @@ public class PatientController {
     private PatientRepository patientRepository;
     @Autowired
     private PatientServiceImplementation patientService;
+    @Autowired
+    private NurseRepository nurseRepository;
+    @Autowired
+    private NurseServiceImplementation nurseService;
     @Autowired
     RoleRepository roleRepository;
     @Autowired
@@ -129,10 +136,21 @@ public class PatientController {
     }
 
     @GetMapping(value = "/getAllPatientsOfDoctor")
-    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
+    @PreAuthorize("hasRole('DOCTOR')")
     public ResponseEntity<ResponseObject> findAllPatientOfDoctor(@RequestParam("id") Long id){
         logger.info("Get with ID: " + id);
         List<PatientDto> patients = patientService.viewPatientOfDoctor(id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("ok", "Success", patients)
+        );
+    }
+
+    @GetMapping(value = "/nurseGetAllPatientsOfDoctor")
+    @PreAuthorize("hasRole('NURSE')")
+    public ResponseEntity<ResponseObject> nurseGetAllPatientsOfDoctor(@RequestParam("id") Long id){
+        logger.info("Get with ID: " + id);
+        Optional<Nurse> nurse = nurseRepository.findById(id);
+        List<PatientDto> patients = patientService.viewPatientOfDoctor(nurse.get().getDoctor().getId());
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "Success", patients)
         );
@@ -150,6 +168,25 @@ public class PatientController {
                 patientRepository.registerDoctor(id, chosen_doctor);
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseObject("ok", "Success", "register successfully !")
+                );
+            }
+        }
+        return ResponseEntity.badRequest().body(new MessageResponse("Bad Request"));
+    }
+
+
+    @PutMapping(value = "/UnRegisterDoctor")
+    @PreAuthorize("hasRole('PATIENT')")
+    public ResponseEntity<?> UnRegisterDoctor(@RequestParam Long id){
+        Optional<Patient> patient = patientRepository.findById(id);
+        if(patient.isPresent()){
+            if(patient.get().getDoctor() == null){
+                return ResponseEntity.badRequest().body(new MessageResponse("You did not register doctor"));
+            }
+            else{
+                patientRepository.registerDoctor(id, null);
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("ok", "Success", "Unregister successfully !")
                 );
             }
         }

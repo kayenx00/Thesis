@@ -15,7 +15,7 @@ public class HealthDeclarationDto {
     private String muscleache;
     private Date last_update;
     private String advice ;
-    private String comment ;
+    private String comment;
     private String measured_by;
     public HealthDeclarationDto(Long id, Long patient_id, int blood_pressure, int oxygen_level, String other_diagnose, Date last_update, String advice, String comment, String measured_by) {
         this.id = id;

@@ -1,10 +1,7 @@
 package com.Covid_19Patient_Management.Thesis.controllers;
 
-import com.Covid_19Patient_Management.Thesis.dtos.DoctorDto;
 import com.Covid_19Patient_Management.Thesis.dtos.NurseDto;
-import com.Covid_19Patient_Management.Thesis.exception.DoctorNotFoundException;
 import com.Covid_19Patient_Management.Thesis.models.*;
-import com.Covid_19Patient_Management.Thesis.payload.request.CreateDoctorRequest;
 import com.Covid_19Patient_Management.Thesis.payload.request.CreateNurseRequest;
 import com.Covid_19Patient_Management.Thesis.payload.response.MessageResponse;
 import com.Covid_19Patient_Management.Thesis.payload.response.ResponseObject;
@@ -55,6 +52,7 @@ public class NurseController {
         Optional<Nurse> nurse = nurseRepository.findNurseByUserID(id);
         NurseDto nurseDto = new NurseDto();
         nurseDto.clone(nurse.get());
+        nurseDto.setWork_under_doctor(nurse.get().getDoctor().getName());
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "success", nurseDto)
         );
@@ -141,6 +139,42 @@ public class NurseController {
                     new ResponseObject("error", "Missing required ID", null)
             );
         }
+    }
+
+    @PutMapping(value = "/cancelAssignNurses")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ResponseObject> cancelAssignNurses(@RequestParam(name = "id") List<Long> list){
+        if(list.size() >=0){
+            for(Long l : list){
+                nurseRepository.cancleAssignNurseToDoctor(null, l);
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("ok", "Success", null)
+            );
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
+                    new ResponseObject("error", "Missing required ID", null)
+            );
+        }
+    }
+    @GetMapping(value = "/getNurseOfDoctor")
+    @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR')")
+    public ResponseEntity<?> getNurseOfDoctor(@RequestParam Long doctor_id){
+        List<NurseDto> nurses = nurseService.findNurseOfDoctor(doctor_id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("ok", "Success", nurses)
+        );
+    }
+
+
+    @GetMapping(value = "/getUnassignedNurse")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<?> getUnassignedNurse(){
+        List<NurseDto> nurses = nurseService.findUnassignedNurse(null);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("ok", "Success", nurses)
+        );
     }
 
 //    @DeleteMapping(value = "/ddeleteDoctors")

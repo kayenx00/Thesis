@@ -15,4 +15,6 @@ public interface NurseService {
     //    Doctor edit(Doctor doctor);
     String save(Nurse nurse);
     NurseDto findById(Long id);
+    List<NurseDto> findNurseOfDoctor(Long doctor_id);
+    List<NurseDto> findUnassignedNurse(Long doctor_id);
 }

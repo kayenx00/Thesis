@@ -45,4 +45,27 @@ public class NurseServiceImplementation implements NurseService {
             return null;
         }
     }
+
+    @Override
+    public List<NurseDto> findNurseOfDoctor(Long doctor_id) {
+        List<Nurse> nurses = nurseRepository.findNurseOfDoctor(doctor_id);
+        List<NurseDto> nurseDtos = new ArrayList<>();
+        for (Nurse n: nurses) {
+            NurseDto nurseDto = new NurseDto();
+            nurseDto.clone(n);
+            nurseDtos.add(nurseDto);
+        }
+        return nurseDtos;
+    }
+
+    @Override
+    public List<NurseDto> findUnassignedNurse(Long doctor_id) {
+        List<Nurse> nurses = nurseRepository.findUnassignedOfDoctor(doctor_id);
+        List<NurseDto> nurseDtos = new ArrayList<>();
+        for (Nurse n: nurses) {
+            NurseDto nurseDto = new NurseDto();
+            nurseDto.clone(n);
+            nurseDtos.add(nurseDto);
+        }
+        return nurseDtos;    }
 }

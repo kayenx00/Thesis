@@ -53,13 +53,13 @@ public class AppointmentController {
     @PreAuthorize("hasRole('PATIENT')")
     public ResponseEntity<?> requestAppointment(
             @RequestParam Long patient_id,
-            @RequestParam Long doctor_id,
             @RequestParam String date,
             @RequestParam String start_time,
             @RequestParam int duration) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date dateToAdd = sdf.parse(date);
-        appointmentRepository.requestAnAppointment(patient_id, doctor_id, dateToAdd, start_time, duration, "Request", false);
+        Optional<Patient> patient = patientRepository.findById(patient_id);
+        appointmentRepository.requestAnAppointment(patient_id, patient.get().getDoctor().getId(), dateToAdd, start_time, duration, "Request", false);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "Success", "Request successfully")
         );
@@ -154,8 +154,9 @@ public class AppointmentController {
     @GetMapping(value = "/getInitiateAppointment")
     @PreAuthorize("hasRole('PATIENT')")
     ResponseEntity<?> getInitiateAppointment(
-            @RequestParam Long doctor_id){
-        List<AppointmentDto> appointments = appointmentService.findAllInitiateAppointment("Initiate", false, doctor_id);
+            @RequestParam Long id){
+        Optional<Patient> patient = patientRepository.findById(id);
+        List<AppointmentDto> appointments = appointmentService.findAllInitiateAppointment("Initiate", false, patient.get().getDoctor().getId());
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "Success", appointments)
         );
@@ -232,33 +233,35 @@ public class AppointmentController {
     }
     @PutMapping(value = "/doctorCancelAppointment")
     @PreAuthorize("hasRole('DOCTOR')")
-    ResponseEntity<?> doctorCancelAppointment(@RequestParam Long id) throws MessagingException, UnsupportedEncodingException {
-        Optional<Appointment> appointment = appointmentRepository.findById(id);
-        appointmentRepository.doctorCancelAnAppointment(false, id);
-        //String email = appointment.get().getPatient().getUser().getEmail();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-        String date = dateFormat.format(appointment.get().getDate());
-        String email = "nguyenhlong0910@gmail.com";
-        String fromAddress = "nguyenhlong0910@gmail.com";
-        String senderName = "Patient_Management_Admin";
-        String subject = "Notification from Doctor";
-        String content = "Dear [[name]], username [[username]]<br>"
-                + "Your Doctor - [[DoctorName]] has cancel your appointment on [[date]] at [[time]].<br>"
-                + "Please check it out.<br>"
-                + "Thank you,<br>";
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message);
+    ResponseEntity<?> doctorCancelAppointment(@RequestParam(name = "id") List<Long> list) throws MessagingException, UnsupportedEncodingException {
+        for(Long l : list) {
+            Optional<Appointment> appointment = appointmentRepository.findById(l);
+            appointmentRepository.deleteById(l);
+            //String email = appointment.get().getPatient().getUser().getEmail();
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+            String date = dateFormat.format(appointment.get().getDate());
+            String email = "nguyenhlong0910@gmail.com";
+            String fromAddress = "nguyenhlong0910@gmail.com";
+            String senderName = "Patient_Management_Admin";
+            String subject = "Notification from Doctor";
+            String content = "Dear [[name]], username [[username]]<br>"
+                    + "Your Doctor - [[DoctorName]] has cancel your appointment on [[date]] at [[time]].<br>"
+                    + "Please check it out.<br>"
+                    + "Thank you,<br>";
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message);
 
-        helper.setFrom(fromAddress, senderName);
-        helper.setTo(email);
-        helper.setSubject(subject);
-        content = content.replace("[[name]]", appointment.get().getPatient().getName());
-        content = content.replace("[[username]]", appointment.get().getPatient().getUser().getUsername());
-        content = content.replace("[[DoctorName]]", appointment.get().getDoctor().getName());
-        content = content.replace("[[date]]", date);
-        content = content.replace("[[time]]", appointment.get().getStart_time());
-        helper.setText(content, true);
-        mailSender.send(message);
+            helper.setFrom(fromAddress, senderName);
+            helper.setTo(email);
+            helper.setSubject(subject);
+            content = content.replace("[[name]]", appointment.get().getPatient().getName());
+            content = content.replace("[[username]]", appointment.get().getPatient().getUser().getUsername());
+            content = content.replace("[[DoctorName]]", appointment.get().getDoctor().getName());
+            content = content.replace("[[date]]", date);
+            content = content.replace("[[time]]", appointment.get().getStart_time());
+            helper.setText(content, true);
+            mailSender.send(message);
+        }
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "Success", "Cancel successfully")
         );

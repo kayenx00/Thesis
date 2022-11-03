@@ -29,4 +29,13 @@ public interface NurseRepository extends JpaRepository<Nurse, Long> {
     @Query(value = "Update Nurse set doctor = :doctor where id = :id", nativeQuery = true)
     @Transactional
     void assignNurseToDoctor(@Param("doctor")Long doctor, @Param("id") Long id);
+
+    @Query(value = "SELECT * from nurse where doctor = :doctor_id", nativeQuery = true)
+    List<Nurse> findNurseOfDoctor(@Param("doctor_id") Long doctor_id);
+    @Query(value = "SELECT * from nurse where doctor IS :doctor_id", nativeQuery = true)
+    List<Nurse> findUnassignedOfDoctor(@Param("doctor_id") Long doctor_id);
+    @Modifying
+    @Query(value = "Update Nurse set doctor = :doctor where id = :id", nativeQuery = true)
+    @Transactional
+    void cancleAssignNurseToDoctor(@Param("doctor")Long doctor, @Param("id") Long id);
 }
