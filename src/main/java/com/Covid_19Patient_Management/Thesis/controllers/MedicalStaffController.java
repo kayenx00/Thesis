@@ -37,7 +37,7 @@ import java.util.Set;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api")
-public class AdminController {
+public class MedicalStaffController {
     @Autowired
     PasswordEncoder encoder;
     @Autowired
@@ -50,6 +50,6 @@ public class AdminController {
     private DoctorServiceImplementation doctorService;
     @Autowired
     private PatientServiceImplementation patientService;
-    private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
+    private static final Logger logger = LoggerFactory.getLogger(MedicalStaffController.class);
 
 }

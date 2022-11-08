@@ -1,14 +1,11 @@
 package com.Covid_19Patient_Management.Thesis.controllers;
 
 import com.Covid_19Patient_Management.Thesis.dtos.HealthDeclarationDto;
-import com.Covid_19Patient_Management.Thesis.dtos.HealthInfoDtoForDoctor;
+//import com.Covid_19Patient_Management.Thesis.dtos.HealthInfoDtoForDoctor;
 import com.Covid_19Patient_Management.Thesis.models.*;
 import com.Covid_19Patient_Management.Thesis.payload.response.ResponseObject;
 import com.Covid_19Patient_Management.Thesis.repository.*;
-import com.Covid_19Patient_Management.Thesis.services.serviceImp.DoctorServiceImplementation;
-import com.Covid_19Patient_Management.Thesis.services.serviceImp.HealthInformationServiceImplementation;
-import com.Covid_19Patient_Management.Thesis.services.serviceImp.NurseServiceImplementation;
-import com.Covid_19Patient_Management.Thesis.services.serviceImp.PatientServiceImplementation;
+import com.Covid_19Patient_Management.Thesis.services.serviceImp.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -51,6 +48,10 @@ public class HealthInformationController {
     private HealthInformationRepository healthInformationRepository;
     @Autowired
     private HealthInformationServiceImplementation healthInformationService;
+    @Autowired
+    private TreatmentDurationRepository treatmentDurationRepository;
+    @Autowired
+    private TreatmentDurationServiceImplementation treatmentDurationService;
     @PostMapping(value = "/addHealthDeclaration")
     @PreAuthorize("hasRole('PATIENT')")
     ResponseEntity<?> addHealthDeclaration(
@@ -160,11 +161,38 @@ public class HealthInformationController {
             @RequestParam Long id
     ){
 //        List<Object> list = healthInformationRepository.viewPatientDeclarations(doctor_id, id);
-        ArrayList<HealthInfoDtoForDoctor> list = healthInformationRepository.viewPatientDeclarations(id);
+//        ArrayList<HealthInfoDtoForDoctor> list = healthInformationRepository.viewPatientDeclarations(id);
         List<HealthDeclarationDto> Dtolist = healthInformationService.listAllHealthinformationDto(id);
         //       List<HealthDeclarationDto> lists = healthInformationService.patientFindAllDeclaration();
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "success", Dtolist)
+        );
+    }
+
+    @GetMapping(value = "/viewPatientAllDeclarationsOnDuration")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
+    ResponseEntity<?> viewPatientAllDeclarationsOnDuration(
+            @RequestParam Long id
+    ){
+        Optional<TreatmentDuration> treatmentDuration = treatmentDurationRepository.findById(id);
+        List<HealthDeclarationDto> Dtolist = healthInformationService.listAllHealthinformationDto(treatmentDuration.get().getPatient().getId());
+        List<HealthDeclarationDto> healthDeclarationDtos = new ArrayList<HealthDeclarationDto>();
+        if(treatmentDuration.get().getEnd_date() == null){
+            for(HealthDeclarationDto h : Dtolist){
+                if(h.getLast_update().compareTo(treatmentDuration.get().getStart_date()) >= 0){
+                    healthDeclarationDtos.add(h);
+                }
+            }
+        } else if(treatmentDuration.get().getEnd_date() != null) {
+            for(HealthDeclarationDto h : Dtolist){
+                if(h.getLast_update().compareTo(treatmentDuration.get().getStart_date()) >= 0
+                    && h.getLast_update().compareTo(treatmentDuration.get().getEnd_date()) <= 0){
+                    healthDeclarationDtos.add(h);
+                }
+            }
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("ok", "success", healthDeclarationDtos)
         );
     }
 

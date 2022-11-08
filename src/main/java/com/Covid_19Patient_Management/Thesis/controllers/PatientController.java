@@ -8,10 +8,7 @@ import com.Covid_19Patient_Management.Thesis.payload.request.RegisterRequest;
 import com.Covid_19Patient_Management.Thesis.payload.request.SignupRequest;
 import com.Covid_19Patient_Management.Thesis.payload.response.MessageResponse;
 import com.Covid_19Patient_Management.Thesis.payload.response.ResponseObject;
-import com.Covid_19Patient_Management.Thesis.repository.NurseRepository;
-import com.Covid_19Patient_Management.Thesis.repository.PatientRepository;
-import com.Covid_19Patient_Management.Thesis.repository.RoleRepository;
-import com.Covid_19Patient_Management.Thesis.repository.UserRepository;
+import com.Covid_19Patient_Management.Thesis.repository.*;
 import com.Covid_19Patient_Management.Thesis.services.UserService;
 import com.Covid_19Patient_Management.Thesis.services.serviceImp.NurseServiceImplementation;
 import com.Covid_19Patient_Management.Thesis.services.serviceImp.PatientServiceImplementation;
@@ -27,10 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -48,6 +42,8 @@ public class PatientController {
     private NurseRepository nurseRepository;
     @Autowired
     private NurseServiceImplementation nurseService;
+    @Autowired
+    private TreatmentDurationRepository treatmentDurationRepository;
     @Autowired
     RoleRepository roleRepository;
     @Autowired
@@ -174,17 +170,39 @@ public class PatientController {
         return ResponseEntity.badRequest().body(new MessageResponse("Bad Request"));
     }
 
+    @PutMapping(value = "/newRegisterDoctor")
+    @PreAuthorize("hasRole('PATIENT')")
+    public ResponseEntity<?> newRegisterDoctor(@RequestParam Long chosen_doctor, @RequestParam Long id){
+        Optional<Patient> patient = patientRepository.findById(id);
+        if(patient.isPresent()){
+            if(patient.get().getDoctor() != null){
+                return ResponseEntity.badRequest().body(new MessageResponse("Already register doctor"));
+            }
+            else{
+                patientRepository.registerDoctor(id, chosen_doctor);
+                Date date = new Date();
+                treatmentDurationRepository.registerDoctor(chosen_doctor, id, date);
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("ok", "Success", "register successfully !")
+                );
+            }
+        }
+        return ResponseEntity.badRequest().body(new MessageResponse("Bad Request"));
+    }
+
 
     @PutMapping(value = "/UnRegisterDoctor")
     @PreAuthorize("hasRole('PATIENT')")
     public ResponseEntity<?> UnRegisterDoctor(@RequestParam Long id){
         Optional<Patient> patient = patientRepository.findById(id);
+        Date date = new Date();
         if(patient.isPresent()){
             if(patient.get().getDoctor() == null){
                 return ResponseEntity.badRequest().body(new MessageResponse("You did not register doctor"));
             }
             else{
                 patientRepository.registerDoctor(id, null);
+                treatmentDurationRepository.unRegisterDoctor(date, id, null);
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseObject("ok", "Success", "Unregister successfully !")
                 );
