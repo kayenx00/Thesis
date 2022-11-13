@@ -40,7 +40,7 @@ public class HealthInformationServiceImplementation implements HealthInformation
     }
 
     @Override
-    public List<HealthDeclarationDto> listAllHealthinformationDto(Long id) {
+    public List<HealthDeclarationDto> listAllHealthInformationDtoOfPatient(Long id) {
         {
             List<HealthInformation> list = healthInformationRepository.viewAllHealthDeclarationOfPatientId(id, PageRequest.of(0, 1000, Sort.Direction.DESC, "last_update"));
             List<HealthDeclarationDto> DtoList = new ArrayList<>();

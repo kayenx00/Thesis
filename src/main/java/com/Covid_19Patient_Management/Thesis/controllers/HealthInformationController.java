@@ -148,7 +148,7 @@ public class HealthInformationController {
             @RequestParam Long id
     ){
         List<HealthInformation> list = healthInformationRepository.viewAllHealthDeclarationOfPatientId(id, PageRequest.of(0, 1000, Sort.Direction.DESC, "last_update"));
-        List<HealthDeclarationDto> Dtolist = healthInformationService.listAllHealthinformationDto(id);
+        List<HealthDeclarationDto> Dtolist = healthInformationService.listAllHealthInformationDtoOfPatient(id);
         //       List<HealthDeclarationDto> lists = healthInformationService.patientFindAllDeclaration();
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "success", list)
@@ -162,7 +162,7 @@ public class HealthInformationController {
     ){
 //        List<Object> list = healthInformationRepository.viewPatientDeclarations(doctor_id, id);
 //        ArrayList<HealthInfoDtoForDoctor> list = healthInformationRepository.viewPatientDeclarations(id);
-        List<HealthDeclarationDto> Dtolist = healthInformationService.listAllHealthinformationDto(id);
+        List<HealthDeclarationDto> Dtolist = healthInformationService.listAllHealthInformationDtoOfPatient(id);
         //       List<HealthDeclarationDto> lists = healthInformationService.patientFindAllDeclaration();
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "success", Dtolist)
@@ -175,7 +175,7 @@ public class HealthInformationController {
             @RequestParam Long id
     ){
         Optional<TreatmentDuration> treatmentDuration = treatmentDurationRepository.findById(id);
-        List<HealthDeclarationDto> Dtolist = healthInformationService.listAllHealthinformationDto(treatmentDuration.get().getPatient().getId());
+        List<HealthDeclarationDto> Dtolist = healthInformationService.listAllHealthInformationDtoOfPatient(treatmentDuration.get().getPatient().getId());
         List<HealthDeclarationDto> healthDeclarationDtos = new ArrayList<HealthDeclarationDto>();
         if(treatmentDuration.get().getEnd_date() == null){
             for(HealthDeclarationDto h : Dtolist){

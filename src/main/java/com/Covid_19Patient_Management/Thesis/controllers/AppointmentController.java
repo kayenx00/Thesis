@@ -33,16 +33,16 @@ public class AppointmentController {
     private static final Logger logger = LoggerFactory.getLogger(AppointmentController.class);
     @Autowired
     private JavaMailSender mailSender;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private DoctorRepository doctorRepository;
-    @Autowired
-    private DoctorServiceImplementation doctorService;
+//    @Autowired
+//    private UserRepository userRepository;
+//    @Autowired
+//    private DoctorRepository doctorRepository;
+//    @Autowired
+//    private DoctorServiceImplementation doctorService;
     @Autowired
     private PatientRepository patientRepository;
-    @Autowired
-    private PatientServiceImplementation patientService;
+//    @Autowired
+//    private PatientServiceImplementation patientService;
     @Autowired
     private AppointmentRepository appointmentRepository;
     @Autowired

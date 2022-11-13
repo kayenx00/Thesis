@@ -37,5 +37,5 @@ public interface NurseRepository extends JpaRepository<Nurse, Long> {
     @Modifying
     @Query(value = "Update Nurse set doctor = :doctor where id = :id", nativeQuery = true)
     @Transactional
-    void cancleAssignNurseToDoctor(@Param("doctor")Long doctor, @Param("id") Long id);
+    void cancelAssignNurseToDoctor(@Param("doctor")Long doctor, @Param("id") Long id);
 }

@@ -146,7 +146,7 @@ public class NurseController {
     public ResponseEntity<ResponseObject> cancelAssignNurses(@RequestParam(name = "id") List<Long> list){
         if(list.size() >=0){
             for(Long l : list){
-                nurseRepository.cancleAssignNurseToDoctor(null, l);
+                nurseRepository.cancelAssignNurseToDoctor(null, l);
             }
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("ok", "Success", null)
