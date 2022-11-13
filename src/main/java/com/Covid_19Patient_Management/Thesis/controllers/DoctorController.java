@@ -83,7 +83,6 @@ public class DoctorController {
                     .badRequest()
                     .body(new MessageResponse("Error: Username is already taken!"));
         }
-
         if (userRepository.existsByEmail(request.getEmail())) {
             return ResponseEntity
                     .badRequest()
@@ -101,7 +100,7 @@ public class DoctorController {
         userRepository.save(user);
         Optional<User> userToAddToDoctorTable = userRepository.findByUsername(request.getUsername());
         Long doctorUserId = userToAddToDoctorTable.get().getId();
-        doctorRepository.createDoctor(request.getName(), request.getPhone(), doctorUserId);
+        doctorRepository.createDoctor(request.getName(), request.getPhone(), doctorUserId, request.getWork_Place());
 
 //        }
         return ResponseEntity.ok(new MessageResponse("Doctor account created successfully!"));
@@ -114,8 +113,9 @@ public class DoctorController {
     public ResponseEntity<ResponseObject> updateDoctor(
             @RequestParam Long id,
             @RequestParam String name,
-            @RequestParam String phone){
-        doctorRepository.alterDoctor(name, phone, id);
+            @RequestParam String phone,
+            @RequestParam String work_place){
+        doctorRepository.alterDoctor(name, phone, id, work_place);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "success", "")
         );

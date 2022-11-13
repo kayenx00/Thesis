@@ -191,9 +191,9 @@ public class PatientController {
     }
 
 
-    @PutMapping(value = "/UnRegisterDoctor")
+    @PutMapping(value = "/endTreatmentCourse")
     @PreAuthorize("hasRole('PATIENT')")
-    public ResponseEntity<?> UnRegisterDoctor(@RequestParam Long id){
+    public ResponseEntity<?> endTreatmentCourse(@RequestParam Long id){
         Optional<Patient> patient = patientRepository.findById(id);
         Date date = new Date();
         if(patient.isPresent()){

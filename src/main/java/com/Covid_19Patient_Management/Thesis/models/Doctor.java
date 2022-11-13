@@ -16,7 +16,8 @@ public class Doctor {
     private Long id;
     private String name;
     private String phone;
-
+    @Column(name = "work_place")
+    private String workPlace;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
@@ -88,5 +89,13 @@ public class Doctor {
 
     public void setAppointments(Collection<Appointment> appointments) {
         this.appointments = appointments;
+    }
+
+    public String getWorkPlace() {
+        return workPlace;
+    }
+
+    public void setWorkPlace(String workPlace) {
+        this.workPlace = workPlace;
     }
 }

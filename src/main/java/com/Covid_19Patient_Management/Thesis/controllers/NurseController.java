@@ -92,7 +92,7 @@ public class NurseController {
         userRepository.save(user);
         Optional<User> userToAddToNurseTable = userRepository.findByUsername(request.getUsername());
         Long nurseUserId = userToAddToNurseTable.get().getId();
-        nurseRepository.createNurse(request.getName(), request.getPhone(), nurseUserId);
+        nurseRepository.createNurse(request.getName(), request.getPhone(), request.getWorkPlace(), nurseUserId);
 
 //        }
         return ResponseEntity.ok(new MessageResponse("Doctor account created successfully!"));
@@ -105,8 +105,9 @@ public class NurseController {
     public ResponseEntity<ResponseObject> updateNurse(
             @RequestParam Long id,
             @RequestParam String name,
-            @RequestParam String phone){
-        nurseRepository.alterNurse(name, phone, id);
+            @RequestParam String phone,
+            @RequestParam String work_place){
+        nurseRepository.alterNurse(name, phone, work_place, id);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "success", "")
         );
@@ -146,7 +147,7 @@ public class NurseController {
     public ResponseEntity<ResponseObject> cancelAssignNurses(@RequestParam(name = "id") List<Long> list){
         if(list.size() >=0){
             for(Long l : list){
-                nurseRepository.cancleAssignNurseToDoctor(null, l);
+                nurseRepository.cancelAssignNurseToDoctor(null, l);
             }
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("ok", "Success", null)

@@ -1,12 +1,15 @@
 package com.Covid_19Patient_Management.Thesis.dtos;
 
 import com.Covid_19Patient_Management.Thesis.models.Nurse;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class NurseDto {
     private Long id;
     private String name;
     private String phone;
     private String email;
+    @JsonProperty("work_place")
+    private String work_place;
     private Long user_id;
     private String username;
     private String work_under_doctor;
@@ -94,6 +97,7 @@ public class NurseDto {
         this.user_id = nurse.getUser().getId();
         this.username = nurse.getUser().getUsername();
         this.email = nurse.getUser().getEmail();
+        this.work_place = nurse.getWorkPlace();
         if(nurse.getDoctor() ==null) {
             this.work_under_doctor = null;
         } else {
@@ -108,6 +112,7 @@ public class NurseDto {
 //        this.user_id = doctor.getUser().getId();
         this.username = nurse.getUser().getUsername();
         this.email = nurse.getUser().getEmail();
+        this.work_place = nurse.getWorkPlace();
 
 //        this.patients = doctor.getPatients();
     }

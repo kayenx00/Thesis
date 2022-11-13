@@ -8,6 +8,6 @@ import java.util.List;
 public interface HealthInformationService {
     void addHealthDeclaration();
     List<HealthDeclarationDto> patientFindAllDeclaration();
-    List<HealthDeclarationDto> listAllHealthinformationDto(Long id);
+    List<HealthDeclarationDto> listAllHealthInformationDtoOfPatient(Long id);
 
 }

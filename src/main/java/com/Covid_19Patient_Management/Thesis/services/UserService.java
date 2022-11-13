@@ -26,7 +26,6 @@ public class UserService {
     private RoleRepository roleRepository;
     @Autowired
     private UserRepository repo;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
 

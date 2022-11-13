@@ -16,13 +16,17 @@ public interface NurseRepository extends JpaRepository<Nurse, Long> {
     @Query(value = "SELECT * FROM Nurse", nativeQuery = true)
     List<Nurse> findAllNurse();
     @Modifying
-    @Query(value = "INSERT INTO Nurse(name, phone, user_id) VALUES(:name, :phone, :id)", nativeQuery = true)
+    @Query(value = "INSERT INTO Nurse(name, phone, work_place, user_id) VALUES(:name, :phone, :work_place, :id)", nativeQuery = true)
     @Transactional
-    void createNurse(@Param("name")String name, @Param("phone") String phone, @Param("id") Long id);
+    void createNurse(@Param("name")String name, @Param("phone") String phone, @Param("work_place") String work_place,
+                     @Param("id") Long id
+                    );
     @Modifying
-    @Query(value = "Update Nurse set name = :name, phone = :phone where id = :id", nativeQuery = true)
+    @Query(value = "Update Nurse set name = :name, phone = :phone, work_place = :work_place where id = :id", nativeQuery = true)
     @Transactional
-    void alterNurse(@Param("name")String name, @Param("phone") String phone, @Param("id") Long id);
+    void alterNurse(@Param("name")String name, @Param("phone") String phone, @Param("work_place") String work_place,
+                    @Param("id") Long id
+                    );
     @Query(value = "SELECT * From nurse where user_id = :user_id", nativeQuery = true)
     Optional<Nurse> findNurseByUserID(@Param("user_id") Long id);
     @Modifying
@@ -37,5 +41,5 @@ public interface NurseRepository extends JpaRepository<Nurse, Long> {
     @Modifying
     @Query(value = "Update Nurse set doctor = :doctor where id = :id", nativeQuery = true)
     @Transactional
-    void cancleAssignNurseToDoctor(@Param("doctor")Long doctor, @Param("id") Long id);
+    void cancelAssignNurseToDoctor(@Param("doctor")Long doctor, @Param("id") Long id);
 }

@@ -17,7 +17,8 @@ public class Nurse {
     private Long id;
     private String name;
     private String phone;
-
+    @Column(name = "work_place")
+    private String workPlace;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
@@ -66,5 +67,13 @@ public class Nurse {
 
     public void setDoctor(Doctor doctor) {
         this.doctor = doctor;
+    }
+
+    public String getWorkPlace() {
+        return workPlace;
+    }
+
+    public void setWorkPlace(String workPlace) {
+        this.workPlace = workPlace;
     }
 }

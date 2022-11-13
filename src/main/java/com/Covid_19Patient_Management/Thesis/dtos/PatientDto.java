@@ -12,6 +12,7 @@ public class PatientDto {
     private Long user_id;
     private String username;
     private String chosen_doctor;
+    private String doctorWorkPlace;
 
     public Long getUser_id() {
         return user_id;
@@ -99,6 +100,14 @@ public class PatientDto {
         this.chosen_doctor = chosen_doctor;
     }
 
+    public String getDoctorWorkPlace() {
+        return doctorWorkPlace;
+    }
+
+    public void setDoctorWorkPlace(String doctorWorkPlace) {
+        this.doctorWorkPlace = doctorWorkPlace;
+    }
+
     public void clone(Patient patient){
         this.id = patient.getId();
         this.name = patient.getName();
@@ -110,8 +119,10 @@ public class PatientDto {
         this.username = patient.getUser().getUsername();
         if(patient.getDoctor() == null){
             this.chosen_doctor = null;
+            this.doctorWorkPlace = null;
         }else{
-        this.chosen_doctor = patient.getDoctor().getName();}
+        this.chosen_doctor = patient.getDoctor().getName();
+        this.doctorWorkPlace = patient.getDoctor().getWorkPlace();}
     }
 
 }

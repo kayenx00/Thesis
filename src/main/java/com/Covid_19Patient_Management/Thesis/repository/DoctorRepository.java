@@ -18,13 +18,15 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     @Query(value = "SELECT * FROM DOCTOR", nativeQuery = true)
     List<Doctor> findAllDoctor();
     @Modifying
-    @Query(value = "INSERT INTO Doctor(name, phone, user_id) VALUES(:name, :phone, :id)", nativeQuery = true)
+    @Query(value = "INSERT INTO Doctor(name, phone, user_id, work_place) VALUES(:name, :phone, :id, :work_place)", nativeQuery = true)
     @Transactional
-    void createDoctor(@Param("name")String name, @Param("phone") String phone, @Param("id") Long id);
+    void createDoctor(@Param("name")String name, @Param("phone") String phone, @Param("id") Long id, @Param("work_place")
+            String work_place);
     @Modifying
-    @Query(value = "Update Doctor set name = :name, phone = :phone where id = :id", nativeQuery = true)
+    @Query(value = "Update Doctor set name = :name, phone = :phone, work_place = :work_place where id = :id", nativeQuery = true)
     @Transactional
-    void alterDoctor(@Param("name")String name, @Param("phone") String phone, @Param("id") Long id);
+    void alterDoctor(@Param("name")String name, @Param("phone") String phone, @Param("id") Long id,
+                     @Param("work_place") String work_place);
     @Query(value = "SELECT * From doctor where user_id = :user_id", nativeQuery = true)
     Optional<Doctor> findDoctorByUserID(@Param("user_id") Long id);
     @Query(value = "SELECT h.id, h.patient_id, h.patient_name, p.district, p.city, h.Blood_Pressure, h.Oxygen_level, h.Other_Diagnose, h.lastUpdate " +

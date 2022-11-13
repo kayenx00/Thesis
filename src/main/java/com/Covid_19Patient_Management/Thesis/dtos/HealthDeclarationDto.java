@@ -1,6 +1,7 @@
 package com.Covid_19Patient_Management.Thesis.dtos;
 
 import com.Covid_19Patient_Management.Thesis.models.HealthInformation;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
 
@@ -13,10 +14,15 @@ public class HealthDeclarationDto {
     private String fever;
     private String headache;
     private String muscleache;
+    @JsonProperty("last_update")
     private Date last_update;
     private String advice ;
-    private String comment;
+    @JsonProperty("measured_by")
+
     private String measured_by;
+    @JsonProperty("comment_from_nurse")
+
+    private String comment_from_nurse;
     public HealthDeclarationDto(Long id, Long patient_id, int blood_pressure, int oxygen_level, String other_diagnose, Date last_update, String advice, String comment, String measured_by) {
         this.id = id;
 //        this.patient_id = patient_id;
@@ -25,7 +31,6 @@ public class HealthDeclarationDto {
         this.other_diagnose = other_diagnose;
         this.last_update = last_update;
         this.advice = advice;
-        this.comment = comment;
         this.measured_by = measured_by;
 
     }
@@ -113,6 +118,22 @@ public class HealthDeclarationDto {
         this.muscleache = muscleache;
     }
 
+    public String getMeasured_by() {
+        return measured_by;
+    }
+
+    public void setMeasured_by(String measured_by) {
+        this.measured_by = measured_by;
+    }
+
+    public String getComment_from_nurse() {
+        return comment_from_nurse;
+    }
+
+    public void setComment_from_nurse(String comment_from_nurse) {
+        this.comment_from_nurse = comment_from_nurse;
+    }
+
     public void clone(HealthInformation healthInformation){
         this.id = healthInformation.getId();
         this.blood_pressure = healthInformation.getBlood_pressure();
@@ -123,7 +144,6 @@ public class HealthDeclarationDto {
         this.other_diagnose = healthInformation.getOther_diagnose();
         this.last_update = healthInformation.getLast_update();
         this.advice = healthInformation.getAdvice();
-        this.comment = healthInformation.getComment();
         this.measured_by = healthInformation.getMeasured_by();
     }
 }

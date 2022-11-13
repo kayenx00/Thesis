@@ -26,6 +26,10 @@ public class CreateNurseRequest {
     @Size(min = 10, max = 50)
     private String name;
 
+//    @NotBlank
+    @Size(min = 10, max = 50)
+    private String work_place;
+
     public String getUsername() {
         return username;
     }
@@ -64,6 +68,14 @@ public class CreateNurseRequest {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getWorkPlace() {
+        return work_place;
+    }
+
+    public void setWorkPlace(String workPlace) {
+        this.work_place = workPlace;
     }
 }
 

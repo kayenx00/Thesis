@@ -25,6 +25,9 @@ public class CreateDoctorRequest {
     @NotBlank
     @Size(min = 10, max = 50)
     private String name;
+//    @NotBlank
+    @Size(min = 10, max = 50)
+    private String work_place;
 
     public String getUsername() {
         return username;
@@ -64,5 +67,13 @@ public class CreateDoctorRequest {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getWork_Place() {
+        return work_place;
+    }
+
+    public void setWork_Place(String work_place) {
+        this.work_place = work_place;
     }
 }
