@@ -74,40 +74,81 @@ public class DoctorController {
     }
 
 
-    @PostMapping(value = "/addDoctor")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> addDoctor(@Valid @RequestBody CreateDoctorRequest request){
-        logger.info("Sign up with username: " + request.getUsername() + ", email: " + request.getEmail());
-        if (userRepository.existsByUsername(request.getUsername())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Username is already taken!"));
-        }
-        if (userRepository.existsByEmail(request.getEmail())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Email is already in use!"));
-        }
-        User user = new User(request.getUsername(),
-                request.getEmail(),
-                encoder.encode(request.getPassword()));
-        Set<Role> roles = new HashSet<>();
-        Role userRole = roleRepository.findByName(ERole.ROLE_DOCTOR)
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-        roles.add(userRole);
-        user.setRoles(roles);
-        user.setEnabled(true);
-        userRepository.save(user);
-        Optional<User> userToAddToDoctorTable = userRepository.findByUsername(request.getUsername());
-        Long doctorUserId = userToAddToDoctorTable.get().getId();
-        doctorRepository.createDoctor(request.getName(), request.getPhone(), doctorUserId, request.getWork_Place());
+//    @PostMapping(value = "/addDoctor")
+//    @PreAuthorize("hasRole('ADMIN')")
+//    public ResponseEntity<?> addDoctor(@Valid @RequestBody CreateDoctorRequest request){
+//        logger.info("Sign up with username: " + request.getUsername() + ", email: " + request.getEmail() +
+//                ", and work at:" + request.getWork_Place());
+//        if (userRepository.existsByUsername(request.getUsername())) {
+//            return ResponseEntity
+//                    .badRequest()
+//                    .body(new MessageResponse("Error: Username is already taken!"));
+//        }
+//        if (userRepository.existsByEmail(request.getEmail())) {
+//            return ResponseEntity
+//                    .badRequest()
+//                    .body(new MessageResponse("Error: Email is already in use!"));
+//        }
+//        User user = new User(request.getUsername(),
+//                request.getEmail(),
+//                encoder.encode(request.getPassword()));
+//        Set<Role> roles = new HashSet<>();
+//        Role userRole = roleRepository.findByName(ERole.ROLE_DOCTOR)
+//                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+//        roles.add(userRole);
+//        user.setRoles(roles);
+//        user.setEnabled(true);
+//        userRepository.save(user);
+//        Optional<User> userToAddToDoctorTable = userRepository.findByUsername(request.getUsername());
+//        Long doctorUserId = userToAddToDoctorTable.get().getId();
+//        doctorRepository.createDoctor(request.getName(), request.getPhone(), doctorUserId, request.getWork_Place());
+//
+////        }
+//        return ResponseEntity.ok(new MessageResponse("Doctor account created successfully!"));
+////        return ResponseEntity.status(HttpStatus.OK).body(
+////                new ResponseObject("ok", "Success",userToAddToDoctorTable.get().getId() )
+////        );
+//    }
+@PostMapping(value = "/addDoctor")
+@PreAuthorize("hasRole('ADMIN')")
+public ResponseEntity<?> addDoctor(@RequestParam String username,
+                                   @RequestParam String email,
+                                   @RequestParam String password,
+                                   @RequestParam String phone,
+                                   @RequestParam String name,
+                                   @RequestParam String work_place){
+    logger.info("Sign up with username: " + username + ", email: " + email +
+            ", and work at:" + work_place);
+    if (userRepository.existsByUsername(username)) {
+        return ResponseEntity
+                .badRequest()
+                .body(new MessageResponse("Error: Username is already taken!"));
+    }
+    if (userRepository.existsByEmail(email)) {
+        return ResponseEntity
+                .badRequest()
+                .body(new MessageResponse("Error: Email is already in use!"));
+    }
+    User user = new User(username,
+            email,
+            encoder.encode(password));
+    Set<Role> roles = new HashSet<>();
+    Role userRole = roleRepository.findByName(ERole.ROLE_DOCTOR)
+            .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+    roles.add(userRole);
+    user.setRoles(roles);
+    user.setEnabled(true);
+    userRepository.save(user);
+    Optional<User> userToAddToDoctorTable = userRepository.findByUsername(username);
+    Long doctorUserId = userToAddToDoctorTable.get().getId();
+    doctorRepository.createDoctor(name, phone, doctorUserId, work_place);
 
 //        }
-        return ResponseEntity.ok(new MessageResponse("Doctor account created successfully!"));
+    return ResponseEntity.ok(new MessageResponse("Doctor account created successfully!"));
 //        return ResponseEntity.status(HttpStatus.OK).body(
 //                new ResponseObject("ok", "Success",userToAddToDoctorTable.get().getId() )
 //        );
-    }
+}
     @PutMapping(value = "/updateDoctor")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseObject> updateDoctor(

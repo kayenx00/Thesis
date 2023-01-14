@@ -3,6 +3,7 @@ package com.Covid_19Patient_Management.Thesis.controllers;
 import com.Covid_19Patient_Management.Thesis.dtos.DoctorDto;
 import com.Covid_19Patient_Management.Thesis.dtos.NurseDto;
 import com.Covid_19Patient_Management.Thesis.dtos.PatientDto;
+import com.Covid_19Patient_Management.Thesis.dtos.PatientForSearchDto;
 import com.Covid_19Patient_Management.Thesis.models.*;
 import com.Covid_19Patient_Management.Thesis.payload.request.RegisterRequest;
 import com.Covid_19Patient_Management.Thesis.payload.request.SignupRequest;
@@ -209,5 +210,20 @@ public class PatientController {
             }
         }
         return ResponseEntity.badRequest().body(new MessageResponse("Bad Request"));
+    }
+
+    @PostMapping(value = "/searchPatient")
+    public ResponseEntity<?> searchPatients(@RequestParam(required = false) Long id,
+                                            @RequestParam String id_num,
+                                            @RequestParam String name) {
+//        if(id == null){
+//            s = "";
+//        } else if (id != null) {
+//            s = "id = " + id;
+//        }
+        List<PatientForSearchDto> patientForSearchDtos = patientService.viewSearchedPatient(id, id_num, name);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("ok", "Success", patientForSearchDtos)
+        );
     }
 }

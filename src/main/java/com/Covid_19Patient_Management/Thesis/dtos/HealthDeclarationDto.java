@@ -143,6 +143,7 @@ public class HealthDeclarationDto {
         this.muscleache = healthInformation.getMuscleache();
         this.other_diagnose = healthInformation.getOther_diagnose();
         this.last_update = healthInformation.getLast_update();
+        this.comment_from_nurse = healthInformation.getComment();
         this.advice = healthInformation.getAdvice();
         this.measured_by = healthInformation.getMeasured_by();
     }
