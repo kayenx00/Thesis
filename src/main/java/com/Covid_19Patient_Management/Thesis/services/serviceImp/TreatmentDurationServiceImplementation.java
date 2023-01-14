@@ -7,6 +7,8 @@ import com.Covid_19Patient_Management.Thesis.models.TreatmentDuration;
 import com.Covid_19Patient_Management.Thesis.repository.TreatmentDurationRepository;
 import com.Covid_19Patient_Management.Thesis.services.TreatmentDurationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,7 +20,7 @@ public class TreatmentDurationServiceImplementation implements TreatmentDuration
     private TreatmentDurationRepository treatmentDurationRepository;
     @Override
     public List<TreatmentDurationDto> findAllPatientTreatmentDuration(Long patient_id) {
-        List<TreatmentDuration> treatmentDurations = treatmentDurationRepository.findByPatientID(patient_id);
+        List<TreatmentDuration> treatmentDurations = treatmentDurationRepository.findByPatientID(patient_id, PageRequest.of(0, 1000, Sort.Direction.DESC, "date"));
         List<TreatmentDurationDto> treatmentDurationDtos = new ArrayList<TreatmentDurationDto>();
         for(TreatmentDuration t : treatmentDurations){
             TreatmentDurationDto treatmentDurationDto = new TreatmentDurationDto();

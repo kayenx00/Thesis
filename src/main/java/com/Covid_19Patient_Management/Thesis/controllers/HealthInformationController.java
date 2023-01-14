@@ -245,7 +245,8 @@ public class HealthInformationController {
         Optional<HealthInformation> healthInformation = healthInformationRepository.findById(id);
         Optional<Patient> patient = patientRepository.findById(healthInformation.get().getPatient().getId());
         Optional<User> user = userRepository.findById(patient.get().getUser().getId());
-        String email = user.get().getEmail();
+        //String email = user.get().getEmail();
+        String email = "nguyenhlong0910@gmail.com";
         String fromAddress = "nguyenhlong0910gmail.com";
         String senderName = "Patient_Management_Admin";
         String subject = "Notification from Doctor";

@@ -10,6 +10,8 @@ import com.Covid_19Patient_Management.Thesis.repository.PatientRepository;
 import com.Covid_19Patient_Management.Thesis.repository.TreatmentDurationRepository;
 import com.Covid_19Patient_Management.Thesis.services.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -57,7 +59,7 @@ public class PatientServiceImplementation implements PatientService {
         }
         List<PatientForSearchDto> patientDtos = new ArrayList<>();
         for (Patient p : patients) {
-            List<TreatmentDuration> treatmentDurations = treatmentDurationRepository.findByPatientID(p.getId());
+            List<TreatmentDuration> treatmentDurations = treatmentDurationRepository.findByPatientID(p.getId(), PageRequest.of(0, 1000, Sort.Direction.DESC, "date"));
             for (TreatmentDuration t : treatmentDurations) {
                 PatientForSearchDto patientForSearchDto =
                         new PatientForSearchDto(t.getId(), t.getPatient().getId(), t.getPatient().getName(), t.getPatient().getId_num(),

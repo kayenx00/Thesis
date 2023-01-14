@@ -5,6 +5,8 @@ import com.Covid_19Patient_Management.Thesis.models.Appointment;
 import com.Covid_19Patient_Management.Thesis.repository.AppointmentRepository;
 import com.Covid_19Patient_Management.Thesis.services.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,7 +19,7 @@ public class AppointmentServiceImplementation implements AppointmentService {
     AppointmentRepository appointmentRepository;
     @Override
     public List<AppointmentDto> findAllRequestAppointment(String type, boolean is_confirmed, Long doctor_id) {
-        List<Appointment> appointments = appointmentRepository.viewRequestAppointment(type, doctor_id, is_confirmed);
+        List<Appointment> appointments = appointmentRepository.viewRequestAppointment(type, doctor_id, is_confirmed, PageRequest.of(0, 1000, Sort.Direction.ASC, "date"));
         List<AppointmentDto> appointmentDtos = new ArrayList<AppointmentDto>();
         Date currentDate = new Date();
         for(Appointment a : appointments){
@@ -31,7 +33,7 @@ public class AppointmentServiceImplementation implements AppointmentService {
     }
     @Override
     public List<AppointmentDto> findAllInitiateAppointment(String type, boolean is_confirmed, Long doctor_id) {
-        List<Appointment> appointments = appointmentRepository.viewInitiatedAppointment(type, doctor_id, is_confirmed);
+        List<Appointment> appointments = appointmentRepository.viewInitiatedAppointment(type, doctor_id, is_confirmed, PageRequest.of(0, 1000, Sort.Direction.ASC, "date"));
         List<AppointmentDto> appointmentDtos = new ArrayList<AppointmentDto>();
         Date currentDate = new Date();
         for(Appointment a : appointments){
@@ -46,7 +48,7 @@ public class AppointmentServiceImplementation implements AppointmentService {
 
     @Override
     public List<AppointmentDto> patientViewUpcomingAppointment(Long patient_id, boolean is_confirmed) {
-        List<Appointment> appointments = appointmentRepository.patientUpcomingViewAppointment(patient_id, is_confirmed);
+        List<Appointment> appointments = appointmentRepository.patientUpcomingViewAppointment(patient_id, is_confirmed, PageRequest.of(0, 1000, Sort.Direction.ASC, "date"));
         List<AppointmentDto> appointmentDtos = new ArrayList<AppointmentDto>();
         Date currentDate = new Date();
         for(Appointment a : appointments){
@@ -61,7 +63,7 @@ public class AppointmentServiceImplementation implements AppointmentService {
 
     @Override
     public List<AppointmentDto> doctorViewUpcomingAppointment(Long doctor_id, boolean is_confirmed) {
-        List<Appointment> appointments = appointmentRepository.doctorViewUpcomingAppointment(doctor_id, is_confirmed);
+        List<Appointment> appointments = appointmentRepository.doctorViewUpcomingAppointment(doctor_id, is_confirmed, PageRequest.of(0, 1000, Sort.Direction.ASC, "date"));
         List<AppointmentDto> appointmentDtos = new ArrayList<AppointmentDto>();
         Date currentDate = new Date();
         for(Appointment a : appointments){
