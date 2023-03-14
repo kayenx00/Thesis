@@ -1,9 +1,6 @@
 package com.Covid_19Patient_Management.Thesis.controllers;
 
-import com.Covid_19Patient_Management.Thesis.dtos.DoctorDto;
-import com.Covid_19Patient_Management.Thesis.dtos.NurseDto;
-import com.Covid_19Patient_Management.Thesis.dtos.PatientDto;
-import com.Covid_19Patient_Management.Thesis.dtos.PatientForSearchDto;
+import com.Covid_19Patient_Management.Thesis.dtos.*;
 import com.Covid_19Patient_Management.Thesis.models.*;
 import com.Covid_19Patient_Management.Thesis.payload.request.RegisterRequest;
 import com.Covid_19Patient_Management.Thesis.payload.request.SignupRequest;
@@ -16,15 +13,22 @@ import com.Covid_19Patient_Management.Thesis.services.serviceImp.PatientServiceI
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -44,9 +48,13 @@ public class PatientController {
     @Autowired
     private NurseServiceImplementation nurseService;
     @Autowired
+    private AppointmentRepository appointmentRepository;
+    @Autowired
     private TreatmentDurationRepository treatmentDurationRepository;
     @Autowired
     RoleRepository roleRepository;
+    @Autowired
+    private JavaMailSender mailSender;
     @Autowired
     PasswordEncoder encoder;
     private static final Logger logger = LoggerFactory.getLogger(PatientController.class);
@@ -204,6 +212,58 @@ public class PatientController {
             else{
                 patientRepository.registerDoctor(id, null);
                 treatmentDurationRepository.unRegisterDoctor(date, id, null);
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("ok", "Success", "Unregister successfully !")
+                );
+            }
+        }
+        return ResponseEntity.badRequest().body(new MessageResponse("Bad Request"));
+    }
+
+    @PutMapping(value = "/endTreatmentCourseV2")
+    @PreAuthorize("hasRole('PATIENT')")
+    public ResponseEntity<?> endTreatmentCourseV2(@RequestParam Long id) throws MessagingException, UnsupportedEncodingException {
+        Optional<Patient> patient = patientRepository.findById(id);
+        Date date = new Date();
+        String appointmentToBeCancel = "";
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        if(patient.isPresent()){
+            if(patient.get().getDoctor() == null){
+                return ResponseEntity.badRequest().body(new MessageResponse("You did not register doctor"));
+            }
+            else{
+                patientRepository.registerDoctor(id, null);
+                treatmentDurationRepository.unRegisterDoctor(date, id, null);
+                List<Appointment> appointments = appointmentRepository.patientUpcomingViewAppointment(id, true, PageRequest.of(0, 1000, Sort.Direction.ASC, "date"));
+                for(Appointment a : appointments) {
+                    if(date.compareTo(a.getDate()) <= 0){
+                        appointmentRepository.patientCancelAnAppointment(false, null, a.getId());
+                        appointmentToBeCancel = appointmentToBeCancel.concat("+ Date: " + dateFormat.format(a.getDate()) + ", start at " + a.getStart_time()+"<br>");
+                    }
+                }
+                String email = "nguyenhlong0910@gmail.com";
+                String fromAddress = "nguyenhlong0910@gmail.com";
+                String senderName = "Patient_Management_Admin";
+                String subject = "Notification from Patient";
+                String content = "Dear [[name]], username [[username]]<br>"
+                        + "Your Patient - [[PatientName]] has decided to end his/her treatment with you. " +
+                        "Thus, all of your upcoming appointments with them are automatically canceled. Here is the list of " +
+                        "canceled appointment's date and start time. <br>"+
+                        "[[appointmentToBeCancel]]"+
+                        "Please check it out.<br>"+
+                        "Thank you,<br>";
+                logger.info(appointmentToBeCancel);
+                MimeMessage message = mailSender.createMimeMessage();
+                MimeMessageHelper helper = new MimeMessageHelper(message);
+                helper.setFrom(fromAddress, senderName);
+                helper.setTo(email);
+                helper.setSubject(subject);
+                content = content.replace("[[name]]", patient.get().getDoctor().getName());
+                content = content.replace("[[username]]", patient.get().getDoctor().getUser().getUsername());
+                content = content.replace("[[PatientName]]", patient.get().getName());
+                content = content.replace("[[appointmentToBeCancel]]", appointmentToBeCancel);
+                helper.setText(content, true);
+                mailSender.send(message);
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseObject("ok", "Success", "Unregister successfully !")
                 );
