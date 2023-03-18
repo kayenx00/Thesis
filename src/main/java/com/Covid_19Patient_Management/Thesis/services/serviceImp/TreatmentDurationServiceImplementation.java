@@ -20,7 +20,7 @@ public class TreatmentDurationServiceImplementation implements TreatmentDuration
     private TreatmentDurationRepository treatmentDurationRepository;
     @Override
     public List<TreatmentDurationDto> findAllPatientTreatmentDuration(Long patient_id) {
-        List<TreatmentDuration> treatmentDurations = treatmentDurationRepository.findByPatientID(patient_id, PageRequest.of(0, 1000, Sort.Direction.DESC, "date"));
+        List<TreatmentDuration> treatmentDurations = treatmentDurationRepository.findByPatientID(patient_id, PageRequest.of(0, 1000, Sort.Direction.DESC, "start_date"));
         List<TreatmentDurationDto> treatmentDurationDtos = new ArrayList<TreatmentDurationDto>();
         for(TreatmentDuration t : treatmentDurations){
             TreatmentDurationDto treatmentDurationDto = new TreatmentDurationDto();

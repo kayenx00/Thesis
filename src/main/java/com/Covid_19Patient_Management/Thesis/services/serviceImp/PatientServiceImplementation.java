@@ -59,7 +59,7 @@ public class PatientServiceImplementation implements PatientService {
         }
         List<PatientForSearchDto> patientDtos = new ArrayList<>();
         for (Patient p : patients) {
-            List<TreatmentDuration> treatmentDurations = treatmentDurationRepository.findByPatientID(p.getId(), PageRequest.of(0, 1000, Sort.Direction.DESC, "date"));
+            List<TreatmentDuration> treatmentDurations = treatmentDurationRepository.findByPatientID(p.getId(), PageRequest.of(0, 1000, Sort.Direction.ASC, "ID"));
             for (TreatmentDuration t : treatmentDurations) {
                 PatientForSearchDto patientForSearchDto =
                         new PatientForSearchDto(t.getId(), t.getPatient().getId(), t.getPatient().getName(), t.getPatient().getId_num(),

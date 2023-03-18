@@ -235,7 +235,14 @@ public class PatientController {
                 patientRepository.registerDoctor(id, null);
                 treatmentDurationRepository.unRegisterDoctor(date, id, null);
                 List<Appointment> appointments = appointmentRepository.patientUpcomingViewAppointment(id, true, PageRequest.of(0, 1000, Sort.Direction.ASC, "date"));
+                List<Appointment> appoinments2 = appointmentRepository.viewRequestAppointmentForPatient("Request", patient.get().getDoctor().getId(), patient.get().getId(), false);
                 for(Appointment a : appointments) {
+                    if(date.compareTo(a.getDate()) <= 0){
+                        appointmentRepository.patientCancelAnAppointment(false, null, a.getId());
+                        appointmentToBeCancel = appointmentToBeCancel.concat("+ Date: " + dateFormat.format(a.getDate()) + ", start at " + a.getStart_time()+"<br>");
+                    }
+                }
+                for(Appointment a : appoinments2) {
                     if(date.compareTo(a.getDate()) <= 0){
                         appointmentRepository.patientCancelAnAppointment(false, null, a.getId());
                         appointmentToBeCancel = appointmentToBeCancel.concat("+ Date: " + dateFormat.format(a.getDate()) + ", start at " + a.getStart_time()+"<br>");
@@ -247,7 +254,7 @@ public class PatientController {
                 String subject = "Notification from Patient";
                 String content = "Dear [[name]], username [[username]]<br>"
                         + "Your Patient - [[PatientName]] has decided to end his/her treatment with you. " +
-                        "Thus, all of your upcoming appointments with them are automatically canceled. Here is the list of " +
+                        "Thus, all of your upcoming appointments with them and their request appointments to you are automatically canceled. Here is the list of " +
                         "canceled appointment's date and start time. <br>"+
                         "[[appointmentToBeCancel]]"+
                         "Please check it out.<br>"+

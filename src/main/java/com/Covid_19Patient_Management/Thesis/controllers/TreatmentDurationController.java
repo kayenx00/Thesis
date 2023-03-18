@@ -22,8 +22,8 @@ public class TreatmentDurationController {
     private TreatmentDurationServiceImplementation treatmentDurationService;
     private TreatmentDurationRepository treatmentDurationRepository;
 
-    @GetMapping(value = "/getTreatmentDuration")
-    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
+    @PostMapping(value = "/getTreatmentDuration")
+    @PreAuthorize("hasRole('DOCTOR')")
     ResponseEntity<?> getTreatmentDuration(@RequestParam Long id){
         List<TreatmentDurationDto> treatmentDurationDtos = treatmentDurationService.findAllPatientTreatmentDuration(id);
         return ResponseEntity.status(HttpStatus.OK).body(
