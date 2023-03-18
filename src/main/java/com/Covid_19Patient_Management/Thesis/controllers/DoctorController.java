@@ -117,7 +117,7 @@ public ResponseEntity<?> addDoctor(@RequestParam String username,
                                    @RequestParam String phone,
                                    @RequestParam String name,
                                    @RequestParam String work_place){
-    logger.info("Sign up with username: " + username + ", email: " + email +
+    logger.info("Add doctor with username: " + username + ", email: " + email +
             ", and work at:" + work_place);
     if (userRepository.existsByUsername(username)) {
         return ResponseEntity

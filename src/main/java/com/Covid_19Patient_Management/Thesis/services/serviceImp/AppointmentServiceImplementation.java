@@ -19,7 +19,7 @@ public class AppointmentServiceImplementation implements AppointmentService {
     AppointmentRepository appointmentRepository;
     @Override
     public List<AppointmentDto> findAllRequestAppointment(String type, boolean is_confirmed, Long doctor_id) {
-        List<Appointment> appointments = appointmentRepository.viewRequestAppointment(type, doctor_id, is_confirmed, PageRequest.of(0, 1000, Sort.Direction.ASC, "date"));
+        List<Appointment> appointments = appointmentRepository.viewRequestAppointment(type, doctor_id, is_confirmed, null, PageRequest.of(0, 1000, Sort.Direction.ASC, "date"));
         List<AppointmentDto> appointmentDtos = new ArrayList<AppointmentDto>();
         Date currentDate = new Date();
         for(Appointment a : appointments){

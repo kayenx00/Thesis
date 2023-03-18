@@ -33,5 +33,9 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
             "from patient p, healthinformation h where h.patient_id = p.id and p.chosen_doctor = :id " +
             "Order by h.patient_id DESC, p.name DESC, h.lastUpdate ASC", nativeQuery = true)
     List<Object> viewPatientDeclarations(@Param("id") Long id);
+    @Modifying
+    @Query(value = "INSERT INTO user_roles(user_id, role_id) VALUES(:user_id, :role_id, :id)", nativeQuery = true)
+    @Transactional
+    void addRoleToExistingUser(@Param("user_id")Long user_id, @Param("role_id") Long role_id);
 
 }

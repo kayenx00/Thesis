@@ -63,11 +63,13 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
             @Param("id") Long id
     );
 
-    @Query(value = "SELECT * FROM Appointment where type = :type and doctor_id = :doctor_id and is_confirmed = :is_confirmed", nativeQuery = true)
+    @Query(value = "SELECT * FROM Appointment where type = :type and doctor_id = :doctor_id and is_confirmed = :is_confirmed and not patient_id is :patient_id", nativeQuery = true)
     List<Appointment> viewRequestAppointment(
             @Param("type") String type,
             @Param("doctor_id") Long doctor_id,
             @Param("is_confirmed") boolean is_confirmed,
+            @Param("patient_id") Long patient_id,
+
             Pageable p
 
     );
