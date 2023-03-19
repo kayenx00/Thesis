@@ -214,8 +214,9 @@ public class AppointmentController {
     @PreAuthorize("hasRole('DOCTOR')")
     ResponseEntity<?> rejectRequestAppointment(@RequestParam(name = "id") List<Long> list) throws MessagingException, UnsupportedEncodingException {
         for(Long l : list){
-            appointmentService.rejectAnAppointment(l);
+            logger.info("" + l);
             Optional<Appointment> appointment = appointmentRepository.findById(l);
+            appointmentService.rejectAnAppointment(l);
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
             String date = dateFormat.format(appointment.get().getDate());
             String email = "nguyenhlong0910@gmail.com";
