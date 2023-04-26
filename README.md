@@ -1,4 +1,4 @@
-# Thesis
+# PATIENTS MANAGEMENT SYSTEM
 ///////////////////////////////// How to install and launch the “Patients System Management” website ////////////////////////
 
 What you need to have: 
