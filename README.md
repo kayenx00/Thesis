@@ -1,33 +1,30 @@
 # PATIENTS MANAGEMENT SYSTEM
-///////////////////////////////// How to install and launch the “Patients System Management” website ////////////////////////
+///////////////////////////////// How to install and launch the “Patients System Management” back-end ////////////////////////
 
 What you need to have: 
 - IntelliJ IDEA (Community or Ultimate).
-- Visual Studio Code.
 - MySQL Workbench. 
-- Ensure your computer has Java (17 or higher) and NodeJS.
+- Ensure your computer has Java (17 or higher).
 - Install Java JDK version 17 or higher. 
 
 Installment: 
 - Go to this link to install the website’s back-end: https://github.com/kayenx00/Thesis
-- Go to this link to install the website’s front-end: https://github.com/kayenx00/covid-19-patient-management-front-end 
-- Use IntelliJ IDEA and Visual Studio Code to open the back-end‚Äôs folder and front-end‚Äôs folder, respectively.
 - Please follow the guidelines of the following link to install and launch MySQL on your local machine: 
 https://www.simplilearn.com/tutorials/mysql-tutorial/mysql-workbench-installation (please remember your root password when installing).
- 
+![image](https://user-images.githubusercontent.com/53591019/234654664-f1f52e2e-04ac-409f-9bdc-93b940097fe2.png)
 Launching: 
 - First, open MySQL Workbench and choose the root.
- 
+![image](https://user-images.githubusercontent.com/53591019/234654706-26995eba-fe56-4442-86d4-88122e6cdbdf.png) 
 - Now open your back-end folder with IntelliJ IDEA. (open IntelliJ IDEA -> File -> Open). 
 - Open Project (File -> Project Structure -> Project Settings -> Project).
- 
+![image](https://user-images.githubusercontent.com/53591019/234654741-3704e0bf-f72f-4352-8ddc-6025915adc5a.png)
 - In your Project window, select SDK, then choose the Java JDK version you installed. 
 - Close the Project window.
 - After adding JDK to the project, you need to Build the project (Build -> Build Project).
 - Then go to the “resources” folder, and access the application.properties file.  
- 
+![image](https://user-images.githubusercontent.com/53591019/234654789-866ea932-bc74-4900-a3a0-9c679ddeadfc.png)
 - In the file, you must change line 4 to your root password(the password you set when installing the MySQL Workbench).
- 
+![image](https://user-images.githubusercontent.com/53591019/234654841-15670e9d-e45b-4b08-9b09-86379a90dbd7.png)
 (Replace ‚”Nguyenlong09102014” with your password). 
 - Now click run to launch the back-end. (Run -> Run ‘ThesisApplication’)
 - Then go back to MySQL Workbench again. 
@@ -42,11 +39,5 @@ Launching:
  INSERT INTO `test`.`user_roles` (`user_id`, `role_id`) VALUES ('1', '1');
 
 ```
-- Now open your front-end folder with your Visual Studio Code. (File -> Open Folder).
-- After opening the folder, open the Terminal tab (Terminal -> New Terminal).
-- On your Terminal tab, enter the following script `npm i` to initiate all packages. 
- 
-- After waiting for the initiating, enter the next script `npm start` to launch the front-end.
- 
-- After waiting for the front-end to start, Visual Studio Code will redirect you to the Website’s homepage. Now you successfully launch the websites. 
+ Now you successfully launch the websites's back-end. 
 
