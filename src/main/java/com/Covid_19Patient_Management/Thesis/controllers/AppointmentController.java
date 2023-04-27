@@ -61,7 +61,7 @@ public class AppointmentController {
         Optional<Patient> patient = patientRepository.findById(patient_id);
         appointmentRepository.requestAnAppointment(patient_id, patient.get().getDoctor().getId(), dateToAdd, start_time, duration, "Request", false);
 //        String email = "nguyenhlong0910@gmail.com";
-        String email = patient.get().getUser().getEmail();
+        String email = patient.get().getDoctor().getUser().getEmail();
         String fromAddress = "nguyenhlong0910@gmail.com";
         String senderName = "Patient_Management_Admin";
         String subject = "Notification from Patient";
