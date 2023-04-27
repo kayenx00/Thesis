@@ -248,7 +248,8 @@ public class PatientController {
                         appointmentToBeCancel = appointmentToBeCancel.concat("+ Date: " + dateFormat.format(a.getDate()) + ", start at " + a.getStart_time()+"<br>");
                     }
                 }
-                String email = "nguyenhlong0910@gmail.com";
+                String email = patient.get().getDoctor().getUser().getEmail();
+//                String email = "nguyenhlong0910@gmail.com";
                 String fromAddress = "nguyenhlong0910@gmail.com";
                 String senderName = "Patient_Management_Admin";
                 String subject = "Notification from Patient";

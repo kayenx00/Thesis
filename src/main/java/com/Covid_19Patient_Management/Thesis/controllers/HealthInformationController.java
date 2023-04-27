@@ -67,9 +67,9 @@ public class HealthInformationController {
         healthInformationRepository.healthDeclaration(id, blood_pressure, oxygen_level, fever, headache, muscleache, other_diagnose, "Patient" ,date);
         Optional<Patient> patient = patientRepository.findById(id);
         Optional<Doctor> doctor = doctorRepository.findById(patient.get().getDoctor().getId());
-        Optional<User> user = userRepository.findById(doctor.get().getUser().getId());
-        //String email = user.get().getEmail();
-        String email = "nguyenhlong0910@gmail.com";
+//        Optional<User> user = userRepository.findById(doctor.get().getUser().getId());
+        String email = doctor.get().getUser().getEmail();
+//        String email = "nguyenhlong0910@gmail.com";
         String fromAddress = "nguyenhlong0910@gmail.com";
         String senderName = "Patient_Management_Admin";
         String subject = "Notification from Patient";
@@ -86,7 +86,7 @@ public class HealthInformationController {
         helper.setSubject(subject);
 
         content = content.replace("[[name]]", doctor.get().getName());
-        content = content.replace("[[username]]", user.get().getUsername());
+        content = content.replace("[[username]]", doctor.get().getUser().getUsername());
         content = content.replace("[[PatientName]]", patient.get().getName());
         helper.setText(content, true);
         mailSender.send(message);
@@ -245,8 +245,8 @@ public class HealthInformationController {
         Optional<HealthInformation> healthInformation = healthInformationRepository.findById(id);
         Optional<Patient> patient = patientRepository.findById(healthInformation.get().getPatient().getId());
         Optional<User> user = userRepository.findById(patient.get().getUser().getId());
-        //String email = user.get().getEmail();
-        String email = "nguyenhlong0910@gmail.com";
+        String email = user.get().getEmail();
+//        String email = "nguyenhlong0910@gmail.com";
         String fromAddress = "nguyenhlong0910gmail.com";
         String senderName = "Patient_Management_Admin";
         String subject = "Notification from Doctor";

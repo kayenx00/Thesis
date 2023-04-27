@@ -60,7 +60,8 @@ public class AppointmentController {
         Date dateToAdd = sdf.parse(date);
         Optional<Patient> patient = patientRepository.findById(patient_id);
         appointmentRepository.requestAnAppointment(patient_id, patient.get().getDoctor().getId(), dateToAdd, start_time, duration, "Request", false);
-        String email = "nguyenhlong0910@gmail.com";
+//        String email = "nguyenhlong0910@gmail.com";
+        String email = patient.get().getUser().getEmail();
         String fromAddress = "nguyenhlong0910@gmail.com";
         String senderName = "Patient_Management_Admin";
         String subject = "Notification from Patient";
@@ -108,10 +109,10 @@ public class AppointmentController {
         for(Long l : list){
             Optional<Appointment> appointment = appointmentRepository.findById(l);
             appointmentRepository.confirmAnAppointment(true, doctor_id, l);
-            //String email = appointment.get().getPatient().getUser().getEmail();
+            String email = appointment.get().getPatient().getUser().getEmail();
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
             String date = dateFormat.format(appointment.get().getDate());
-            String email = "nguyenhlong0910@gmail.com";
+//            String email = "nguyenhlong0910@gmail.com";
             String fromAddress = "nguyenhlong0910@gmail.com";
             String senderName = "Patient_Management_Admin";
             String subject = "Notification from Doctor";
@@ -148,8 +149,8 @@ public class AppointmentController {
             appointmentRepository.bookAnAppointment(true, patient_id, l);
         }
         Optional<Patient> patient = patientRepository.findById(patient_id);
-        //String email = patient.get().getUser().getEmail();
-        String email = "nguyenhlong0910@gmail.com";
+        String email = patient.get().getDoctor().getUser().getEmail();
+//        String email = "nguyenhlong0910@gmail.com";
         String fromAddress = "nguyenhlong0910@gmail.com";
         String senderName = "Patient_Management_Admin";
         String subject = "Notification from Patient";
@@ -219,7 +220,8 @@ public class AppointmentController {
             appointmentService.rejectAnAppointment(l);
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
             String date = dateFormat.format(appointment.get().getDate());
-            String email = "nguyenhlong0910@gmail.com";
+//            String email = "nguyenhlong0910@gmail.com";
+            String email = appointment.get().getPatient().getUser().getEmail();
             String fromAddress = "nguyenhlong0910@gmail.com";
             String senderName = "Patient_Management_Admin";
             String subject = "Notification from Doctor";
@@ -251,10 +253,10 @@ public class AppointmentController {
     ResponseEntity<?> patientCancelAppointment(@RequestParam Long id) throws MessagingException, UnsupportedEncodingException {
         Optional<Appointment> appointment = appointmentRepository.findById(id);
         appointmentRepository.patientCancelAnAppointment(false, null, id);
-        //String email = appointment.get().getDoctor().getUser().getEmail();
+        String email = appointment.get().getDoctor().getUser().getEmail();
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         String date = dateFormat.format(appointment.get().getDate());
-        String email = "nguyenhlong0910@gmail.com";
+//        String email = "nguyenhlong0910@gmail.com";
         String fromAddress = "nguyenhlong0910@gmail.com";
         String senderName = "Patient_Management_Admin";
         String subject = "Notification from Patient";
@@ -285,10 +287,10 @@ public class AppointmentController {
         for(Long l : list) {
             Optional<Appointment> appointment = appointmentRepository.findById(l);
             appointmentRepository.deleteById(l);
-            //String email = appointment.get().getPatient().getUser().getEmail();
+            String email = appointment.get().getPatient().getUser().getEmail();
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
             String date = dateFormat.format(appointment.get().getDate());
-            String email = "nguyenhlong0910@gmail.com";
+//            String email = "nguyenhlong0910@gmail.com";
             String fromAddress = "nguyenhlong0910@gmail.com";
             String senderName = "Patient_Management_Admin";
             String subject = "Notification from Doctor";
