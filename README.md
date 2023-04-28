@@ -42,7 +42,8 @@ Launching:
 (Replace ‚”Nguyenlong09102014” with your password). 
 - Now click run to launch the back-end. (Run -> Run ‘ThesisApplication’)
 - Then go back to MySQL Workbench again. 
-- Open the query tab (File -> New Query Tab), then enter the following scripts:
+- Open the query tab (File -> New Query Tab), then enter the following scripts to create Admin's account (Or Medical Staff's account). Note that 
+the account's username is: "Kayen" and account password is: "654321":
 ```
  USE `test`
  INSERT INTO `test`.`roles` (`id`, `name`) VALUES (`1`, `ROLE_ADMIN`);
