@@ -374,18 +374,5 @@ UNLOCK TABLES;
 
 (Replace ‚”Nguyenlong09102014” with your password). 
 - Now click run to launch the back-end. (Run -> Run ‘ThesisApplication’)
-- Then go back to MySQL Workbench again. 
-- Open the query tab (File -> New Query Tab), then enter the following scripts to create Admin's account (Or Medical Staff's account). Note that 
-the account's username is: "Kayen" and account password is: "654321":
-```
- USE `test`
- INSERT INTO `test`.`roles` (`id`, `name`) VALUES (`1`, `ROLE_ADMIN`);
- INSERT INTO `test`.`roles` (`id`, `name`) VALUES (`2`‚ `ROLE_PATIENT`);
- INSERT INTO `test`.`roles` (`id`, `name`) VALUES (`3`‚ `ROLE_DOCTOR`);
- INSERT INTO `test`.`roles` (`id`, `name`) VALUES (`4`, `ROLE_NURSE`);
- INSERT INTO `test`.`users` (`email`, `password`, `username`, `enabled`) VALUES (`nguyenhlong09@gmail.com`‚ `$2a$10$jM9VC9O8yzqRghpN35Qct.R040oFNoWFaNqe04aT7FhVbdirxB.XO`, `Kayen`, 1);
- INSERT INTO `test`.`user_roles` (`user_id`, `role_id`) VALUES ('1', '1');
-
-```
- Now you successfully launch the websites's back-end. 
+- Now you successfully launch the websites's back-end. 
 
