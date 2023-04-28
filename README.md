@@ -19,7 +19,7 @@ Launching:
 
 ![image](https://user-images.githubusercontent.com/53591019/234654706-26995eba-fe56-4442-86d4-88122e6cdbdf.png) 
 
-- Run the following script to create database name `test`:
+- Run the following script to create the database (note that most password for user is "654321", if it is not correct, try "123456":
 ```
 CREATE DATABASE  IF NOT EXISTS `test` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `test`;
