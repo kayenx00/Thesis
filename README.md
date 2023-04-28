@@ -16,9 +16,12 @@ https://www.simplilearn.com/tutorials/mysql-tutorial/mysql-workbench-installatio
 
 Launching: 
 - First, open MySQL Workbench and choose the root.
+- Run the following script to create database name test:
 
 ![image](https://user-images.githubusercontent.com/53591019/234654706-26995eba-fe56-4442-86d4-88122e6cdbdf.png) 
-
+```
+ CREATE Database `test`;
+```
 - Now open your back-end folder with IntelliJ IDEA. (open IntelliJ IDEA -> File -> Open). 
 - Open Project (File -> Project Structure -> Project Settings -> Project).
 
